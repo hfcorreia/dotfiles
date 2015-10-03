@@ -1,6 +1,7 @@
 #!/bin/zsh
 
 DOTFILES=$(pwd)
+set -e
 
 info () {
   printf "  [ \033[00;34m..\033[0m ] $1\n"
@@ -69,10 +70,17 @@ run_install () {
     update_submodules
     info 'Installing Dotfiles'
     install_dotfiles
+    info 'Installing Vim plugins'
+    [[ ! -d "$HOME/.vim" ]] && mkdir "$HOME/.vim" && info 'Creating .vim folder'
+    $(vim +PluginInstall +qall &> /dev/null)
+    success 'Plugins installed'
   elif [[ "$action" == "u" ]]; then
     update_submodules
-    info 'Updateting Dotfiles'
+    info 'Updating Dotfiles'
     update_dotfiles
+    info 'Updating Vim plugins'
+    $(vim +PluginUpdate +qall &> /dev/null)
+    success 'Plugins Updated'
   elif [[ "$action" == "e" ]]; then
     exit
   else
