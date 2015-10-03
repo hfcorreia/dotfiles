@@ -1,0 +1,45 @@
+[alias]
+  a  = add
+  aa = add --all
+  ai = add -i
+  #########
+  b = brach -v
+  ba = branch -va
+  bd = branch -d
+  #########
+  c = commit
+  ca = commit -a
+  cam = commit --am
+  cd = commit --amend
+  cad = commit -a --amend
+  #########
+  co = checkout
+  cob = checkout -b
+  #########
+  d = diff
+  dl = difftool
+  #########
+  m = merge
+  ma = merge --abort
+  mc = merge --continue
+  ms = merge --skip
+  #########
+  st = status -s -b
+  #########
+  ls = log --pretty=oneline
+[color]
+  ui = true
+  diff = auto
+  status = auto
+  branch = auto
+[core]
+  editor = vim
+[init]
+  templatedir = ~/.dotfiles/git/templates
+[help]
+  autocorrect = 1
+[mergetool]
+  keepBackup = false
+[user]
+  name = Hugo Correia
+  email = hfcorreia91@gmail.com

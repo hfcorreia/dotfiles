@@ -1,0 +1,164 @@
+" Dont use vi-compatible mode
+set nocompatible
+filetype off
+
+" Set the runtime
+set rtp+=~/.dotfiles/vim/.vundle.vim
+call vundle#begin()
+
+Plugin 'VundleVim/Vundle.vim'
+Plugin 'altercation/vim-colors-solarized'
+Plugin 'bling/vim-airline'
+Plugin 'kien/ctrlp.vim'
+Plugin 'bronson/vim-trailing-whitespace'
+Plugin 'nathanaelkane/vim-indent-guides'
+Plugin 'luochen1990/rainbow'
+
+call vundle#end()            " required
+filetype plugin indent on    " required
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" General Config
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Enable Solarized colorschem
+colorscheme solarized
+
+" Enable filetype plugin
+filetype plugin on
+filetype indent on
+
+" Set history limit
+set history=1000
+
+" Show current position
+set ruler
+
+" Set backspace config
+set backspace=eol,start,indent
+set whichwrap+=<,>,h,l
+
+" Ingnore case when searching
+set ignorecase
+set smartcase
+
+" Incremental search
+set incsearch
+
+" Show matching bracets
+set showmatch
+
+" Set numbers
+set nu
+
+" Better command autocompletion
+set wildmenu
+
+" No redraw
+set lazyredraw
+
+" No linespace between rows
+set linespace=0
+
+" For regular expressions
+set magic
+
+" No annoying sound on errors
+set noerrorbells
+set novisualbell
+set t_vb=
+set tm=500
+
+" Always display status line
+set laststatus=2
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Text files config
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+autocmd BufRead,FileType gitcommit,*.md,*.txt,*.tex set wrap
+autocmd BufRead,FileType gitcommit,*.md,*.txt,*.tex set nonumber
+autocmd BufRead,FileType gitcommit,*.md,*.txt,*.tex set textwidth=0
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Spell Checks
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Automatic spellchek
+autocmd BufRead,BufNewFile,FileType gitcommit,*.md,*.txt,*.tex  setlocal spell
+set complete+=kspell
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Colors and Fonts
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Enable syntax hl
+syntax on
+
+" Set background
+set background=dark
+
+" Set enconding as utf8
+set encoding=utf8
+
+set t_Co=256
+
+if has("gui_running")
+  set guioptions-=T
+  set guioptions-=m
+  set guioptions-=r
+  set guioptions-=l
+  set guioptions-=b
+  set guioptions-=L
+
+endif
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Files and backup
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Turn off backup
+set nobackup
+set nowb
+set noswapfile
+
+" Look for tags
+:set tags=./tags,./../tags,./*/tags
+
+" Includes
+:set path+=/usr/*/include
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Tabs and indent
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Expands tab
+set expandtab
+
+" Auto-indent
+set ai
+set si
+set ci
+
+" Auto-indent amount
+set shiftwidth=2
+set shiftround
+
+" Tabs
+set tabstop=2
+set softtabstop=2
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Mappings
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Define the map leader
+let mapleader = '\<space>'
+
+" Stop using <esc>
+inoremap jk <esc>
+inoremap <esc> <nop>
+
+" Smart way to move btw. windows
+map <C-j> <C-W>j
+map <C-k> <C-W>k
+map <C-h> <C-W>h
+map <C-l> <C-W>l
+
+" Cycle through buffers
+map <right> :bn<cr>
+map <left> :bp<cr>
+
+" List Buffer
+map <up> :ls<cr>
+map <down> mzgg=G`z<CR>
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugins Config
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:rainbow_active = 1

@@ -1,0 +1,13 @@
+#!/bin/zsh
+
+# Preprend [BRANCH_NAME] to commit message when editing the commit message
+
+# The Branch names to skip
+BRANCH_SKIP=(master develop)
+
+if [ x = x${2} ]; then
+  BRANCH_NAME=$(git symbolic-ref --short HEAD)
+  if [[ ${BRANCH_SKIP[(i)$BRANCH_NAME]} -ge ${#BRANCH_SKIP} ]]; then
+    sed -i.bak -e "1s/^/[$BRANCH_NAME] /" $1
+  fi
+fi

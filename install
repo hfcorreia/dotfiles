@@ -1,0 +1,86 @@
+#!/bin/zsh
+
+DOTFILES=$(pwd)
+
+info () {
+  printf "  [ \033[00;34m..\033[0m ] $1\n"
+}
+
+user () {
+  printf "\r  [ \033[0;33m?\033[0m ] $1\n"
+}
+
+success () {
+  printf "\r\033[2K  [ \033[00;32mOK\033[0m ] $1\n"
+}
+
+fail () {
+  printf "\r\033[2K  [\033[0;31mFAIL\033[0m] $1\n"
+  echo ''
+  exit
+}
+
+install_dotfiles () {
+  for src in $(find -H "$DOTFILES" -name '*.symlink'); do
+    dst="$HOME/.$(basename "${src%.*}")"
+
+    if [ -f "$dst" -o -d "$dst" -o -L "$dst" ]; then
+      if [ "$(readlink $dst)" -ef "$src" ]; then
+        rm -rf "$dst"
+      fi
+    fi
+
+    ln -s "$src" "$dst"
+    success "linked $src to $dst"
+  done
+}
+
+update_dotfiles () {
+  for src in $(find -H "$DOTFILES" -name '*.symlink'); do
+    dst="$HOME/.$(basename "${src%.*}")"
+
+    if [ -f "$dst" -o -d "$dst" -o -L "$dst" ]; then
+      if [ "$(readlink $dst)" -ef "$src" ]; then
+        continue
+      fi
+    fi
+
+    ln -s "$src" "$dst"
+    success "linked $src to $dst"
+  done
+}
+
+update_submodules () {
+  info 'Updating git submodules'
+  $(git submodule update --remote)
+}
+
+run_install () {
+  local action=
+  echo ''
+  user "Installing Dotfiles. What do you want to do?\
+    \n\t[i]nstall - clean install (overides existing symlinks)\
+    \n\t[u]pdate  - add missing symlinks\
+    \n\t[e]exit   - exit without doing nothing"
+  printf "   > "
+  read action
+
+  if [[ "$action" == "i" ]]; then
+    update_submodules
+    info 'Installing Dotfiles'
+    install_dotfiles
+  elif [[ "$action" == "u" ]]; then
+    update_submodules
+    info 'Updateting Dotfiles'
+    update_dotfiles
+  elif [[ "$action" == "e" ]]; then
+    exit
+  else
+    fail "Invalid command!"
+  fi
+
+  echo '  All installed!'
+  echo ''
+}
+
+run_install
