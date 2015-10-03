@@ -20,7 +20,7 @@ filetype plugin indent on    " required
 " General Config
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Enable Solarized colorschem
-colorscheme solarized
+silent!  colorscheme solarized
 
 " Enable filetype plugin
 filetype plugin on
