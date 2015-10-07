@@ -20,7 +20,7 @@ ENABLE_CORRECTION="true"
 #ZSH_CUSTOM=$HOME/.dotfiles/zsh
 
 # Oh-my-zsh plugins to load
-plugins=(git history-substring-search brew brew-cask colored-man gem npm)
+plugins=(git history-substring-search brew brew-cask colored-man gem npm rvm)
 
 # Load all of the zsh relevant files
 source $ZSH/oh-my-zsh.sh
