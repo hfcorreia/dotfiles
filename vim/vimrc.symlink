@@ -1,3 +1,6 @@
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Vundle Plugins
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Dont use vi-compatible mode
 set nocompatible
 filetype off
@@ -6,25 +9,62 @@ filetype off
 set rtp+=~/.dotfiles/vim/.vundle.vim
 call vundle#begin()
 
+" Manage the plugins
 Plugin 'VundleVim/Vundle.vim'
+
+" Git wrapper
+Plugin 'tpope/vim-fugitive'
+
+" Solarized colorscheme
 Plugin 'altercation/vim-colors-solarized'
-Plugin 'bling/vim-airline'
+
+" Status line
+Plugin 'itchyny/lightline.vim'
+
+" Fuzzy finder
 Plugin 'kien/ctrlp.vim'
+
+" Rainbow parenthesis
+Plugin 'kien/rainbow_parentheses.vim'
+
+" Supertab completion
+Plugin 'ervandew/supertab'
+
+" Identation guidlines
+Plugin 'Yggdroot/indentLine'
+
+" Easy comments
+Plugin 'scrooloose/nerdcommenter'
+
+" File explorer
+Plugin 'scrooloose/nerdtree'
+
+" Move quicker
+Plugin 'easymotion/vim-easymotion'
+
+" Add relative numbers
+Plugin 'myusuf3/numbers.vim'
+
+" Fix whitespace
 Plugin 'bronson/vim-trailing-whitespace'
-Plugin 'nathanaelkane/vim-indent-guides'
-Plugin 'luochen1990/rainbow'
+
+" Line with buffer names
+Plugin 'bling/vim-bufferline'
+
+" Repeat
+Plugin 'tpope/vim-repeat'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " General Config
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Enable Solarized colorschem
-silent!  colorscheme solarized
-
 " Enable filetype plugin
 filetype plugin on
 filetype indent on
+
+" Set default shell
+set shell=/bin/zsh
 
 " Set history limit
 set history=1000
@@ -72,6 +112,7 @@ set laststatus=2
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Text files config
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+autocmd BufRead,BufReadPost,FileType *.md set filetype=markdown
 autocmd BufRead,FileType gitcommit,*.md,*.txt,*.tex set wrap
 autocmd BufRead,FileType gitcommit,*.md,*.txt,*.tex set nonumber
 autocmd BufRead,FileType gitcommit,*.md,*.txt,*.tex set textwidth=0
@@ -87,22 +128,26 @@ set complete+=kspell
 " Enable syntax hl
 syntax on
 
+" Enable Solarized colorschem
+silent!  colorscheme solarized
+
 " Set background
 set background=dark
 
 " Set enconding as utf8
 set encoding=utf8
+scriptencoding utf-8
 
 set t_Co=256
 
 if has("gui_running")
+  set guifont=Monaco
   set guioptions-=T
   set guioptions-=m
   set guioptions-=r
   set guioptions-=l
   set guioptions-=b
   set guioptions-=L
-
 endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Files and backup
@@ -114,9 +159,6 @@ set noswapfile
 
 " Look for tags
 :set tags=./tags,./../tags,./*/tags
-
-" Includes
-:set path+=/usr/*/include
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Tabs and indent
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -139,7 +181,7 @@ set softtabstop=2
 " Mappings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Define the map leader
-let mapleader = '\<space>'
+let mapleader = "\<Space>"
 
 " Stop using <esc>
 inoremap jk <esc>
@@ -151,14 +193,118 @@ map <C-k> <C-W>k
 map <C-h> <C-W>h
 map <C-l> <C-W>l
 
-" Cycle through buffers
-map <right> :bn<cr>
-map <left> :bp<cr>
-
 " List Buffer
-map <up> :ls<cr>
-map <down> mzgg=G`z<CR>
+map <leader>i mzgg=G`z<CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugins Config
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:rainbow_active = 1
+" Lightline
+let g:lightline = {
+      \ 'colorscheme': 'solarized',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'filename' ], ['ctrlpmark'] ]
+      \ },
+      \ 'component_function': {
+      \   'filename': 'LightLineFilename',
+      \   'fugitive': 'LightLineFugitive',
+      \   'ctrlpmark': 'CtrlPMark',
+      \   'mode': 'LightLineMode'
+      \ }
+      \ }
+
+
+function! LightLineMode()
+  let fname = expand('%:t')
+  return  fname == 'ControlP' ? 'CtrlP' :
+        \ fname =~ 'NERD_tree' ? 'NERDTree' :
+        \ winwidth(0) > 60 ? lightline#mode() : ''
+endfunction
+
+function! LightLineModified()
+  if &filetype == "help"
+    return ""
+  elseif &modified
+    return "+"
+  elseif &modifiable
+    return ""
+  else
+    return ""
+  endif
+endfunction
+
+function! LightLineFilename()
+  return ('' != expand('%:t') ? expand('%:t') : '[No Name]') .
+        \ ('' != LightLineModified() ? ' ' . LightLineModified() : '')
+endfunction
+
+function! LightLineFugitive()
+  return exists('*fugitive#head') ? fugitive#head() : ''
+endfunction
+
+function! CtrlPMark()
+  if expand('%:t') =~ 'ControlP'
+    call lightline#link('iR'[g:lightline.ctrlp_regex])
+    return lightline#concatenate([g:lightline.ctrlp_prev, g:lightline.ctrlp_item , g:lightline.ctrlp_next], 0)
+  else
+    return ''
+  endif
+endfunction
+
+let g:ctrlp_status_func = {
+      \ 'main': 'CtrlPStatusFunc_1',
+      \ 'prog': 'CtrlPStatusFunc_2'
+      \ }
+
+function! CtrlPStatusFunc_1(focus, byfname, regex, prev, item, next, marked)
+  let g:lightline.ctrlp_regex = a:regex
+  let g:lightline.ctrlp_prev = a:prev
+  let g:lightline.ctrlp_item = a:item
+  let g:lightline.ctrlp_next = a:next
+  return lightline#statusline(0)
+endfunction
+
+function! CtrlPStatusFunc_2(str)
+  return lightline#statusline(0)
+endfunction
+
+" Ctrl-P
+let g:ctrlp_by_filename = 1
+let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:5,results:5'
+
+" Rainbow
+let g:rbpt_colorpairs = [
+      \ [ '13', '#6c71c4'],
+      \ [ '5',  '#d33682'],
+      \ [ '1',  '#dc322f'],
+      \ [ '9',  '#cb4b16'],
+      \ [ '3',  '#b58900'],
+      \ [ '2',  '#859900'],
+      \ [ '6',  '#2aa198'],
+      \ [ '4',  '#268bd2'],
+      \ ]
+
+augroup rainbow_parentheses
+  au!
+  au VimEnter * RainbowParenthesesActivate
+  au BufEnter * RainbowParenthesesLoadRound
+  au BufEnter * RainbowParenthesesLoadSquare
+  au BufEnter * RainbowParenthesesLoadBraces
+augroup END
+
+" IdentLine
+let g:indentLine_char = '|'
+
+" NERDTree
+map <Leader><tab> :NERDTreeToggle<CR>
+
+" EasyMotion
+let g:EasyMotion_use_upper = 1
+let g:EasyMotion_smartcase = 1
+
+map <Leader> <Plug>(easymotion-prefix)
+nmap s <Plug>(easymotion-s2)
+map <Leader>j <Plug>(easymotion-j)
+map <Leader>k <Plug>(easymotion-k)
+
+" Numbers
+let g:numbers_exclude = ['nerdtree']
