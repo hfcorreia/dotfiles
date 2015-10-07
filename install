@@ -1,6 +1,7 @@
 #!/bin/zsh
 
-DOTFILES=$(pwd)
+DOTFILES=$HOME/.dotfiles
+cd $DOTFILES
 set -e
 
 info () {
@@ -53,7 +54,7 @@ update_dotfiles () {
 
 update_submodules () {
   info 'Updating git submodules'
-  $(git submodule update --remote)
+  $(git submodule update --remote &> /dev/null)
 }
 
 run_install () {
