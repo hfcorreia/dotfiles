@@ -3,27 +3,22 @@ export DOTFILES=$HOME/.dotfiles
 export ZSH=$DOTFILES/zsh/.oh-my-zsh
 
 # Set name of the theme to load.
-# Look in ~/.oh-my-zsh/themes/
-# Optionally, if you set this to "random", it'll load a random theme each
-# time that oh-my-zsh is loaded.
 ZSH_THEME="simple"
-
 CASE_SENSITIVE="false"
-
-# How often to auto-update (in days).
 export UPDATE_ZSH_DAYS=10
-
-# Enable command auto-correction.
 ENABLE_CORRECTION="true"
-
-# Custom zsh files
-#ZSH_CUSTOM=$HOME/.dotfiles/zsh
-
+#
 # Oh-my-zsh plugins to load
 plugins=(git history-substring-search brew brew-cask colored-man gem npm rvm)
 
 # Load all of the zsh relevant files
 source $ZSH/oh-my-zsh.sh
+
+# Check for local definitions
+if [[ -a $HOME/.localrc ]]
+then
+    source $HOME/.localrc
+fi
 
 typeset -U config_files
 config_files=($DOTFILES/**/*.zsh)
