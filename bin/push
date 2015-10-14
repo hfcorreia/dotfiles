@@ -1,5 +1,5 @@
 #!/bin/zsh
-# push to orign branch
+# push to origin branch
 
 if [[ ARGC -ne 1 ]]; then
   print "Invalid usage: push <branch-name>"
