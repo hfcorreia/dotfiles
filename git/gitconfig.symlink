@@ -3,7 +3,7 @@
   aa = add --all
   ai = add -i
   #########
-  b = brach -v
+  b = branch -v
   ba = branch -va
   bd = branch -d
   #########
@@ -40,6 +40,13 @@
   autocorrect = 1
 [mergetool]
   keepBackup = false
+[merge]
+  tool = vimdiff
 [user]
   name = Hugo Correia
   email = hfcorreia91@gmail.com
+[difftool]
+	tool = vimdiff
+	prompt = false
+[push]
+	default = simple
