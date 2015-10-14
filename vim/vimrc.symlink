@@ -54,6 +54,9 @@ Plugin 'bling/vim-bufferline'
 " Repeat
 Plugin 'tpope/vim-repeat'
 
+" CSS, SASS runtime files
+Plugin 'tpope/vim-haml'
+
 call vundle#end()            " required
 filetype plugin indent on    " required
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
