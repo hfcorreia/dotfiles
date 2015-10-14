@@ -60,9 +60,9 @@ update_submodules () {
 run_install () {
   local action=
   echo ''
-  user "Installing Dotfiles. What do you want to do?\
+  user "Dotfiles: What do you want to do?\
     \n\t[i]nstall - clean install (overides existing symlinks)\
-    \n\t[u]pdate  - add missing symlinks\
+    \n\t[u]pdate  - add missing symlinks, update submodules and vim plugins\
     \n\t[e]exit   - exit without doing nothing"
   printf "   > "
   read action
