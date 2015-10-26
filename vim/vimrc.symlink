@@ -57,6 +57,12 @@ Plugin 'tpope/vim-repeat'
 " CSS, SASS runtime files
 Plugin 'tpope/vim-haml'
 
+" JavaScript
+Plugin 'pangloss/vim-javascript'
+
+" React
+Plugin 'mxw/vim-jsx'
+
 call vundle#end()            " required
 filetype plugin indent on    " required
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -205,16 +211,26 @@ map <leader>i mzgg=G`z<CR>
 let g:lightline = {
       \ 'colorscheme': 'solarized',
       \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'filename' ], ['ctrlpmark'] ]
+      \   'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'filename' ], ['ctrlpmark'] ],
+      \   'right': [ [ 'lineinfo', 'percent'], [ 'bufferline' ] ]
       \ },
       \ 'component_function': {
       \   'filename': 'LightLineFilename',
       \   'fugitive': 'LightLineFugitive',
       \   'ctrlpmark': 'CtrlPMark',
+      \   'bufferline': 'LightLineBufferline',
       \   'mode': 'LightLineMode'
       \ }
       \ }
 
+let g:bufferline_echo = 0
+function! LightLineBufferline()
+  call bufferline#refresh_status()
+  let b = g:bufferline_status_info.before
+  let c = g:bufferline_status_info.current
+  let a = g:bufferline_status_info.after
+  return b . c . a
+endfunction
 
 function! LightLineMode()
   let fname = expand('%:t')
@@ -311,3 +327,6 @@ map <Leader>k <Plug>(easymotion-k)
 
 " Numbers
 let g:numbers_exclude = ['nerdtree']
+
+" React
+let g:jsx_ext_required = 0
