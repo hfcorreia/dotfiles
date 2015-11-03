@@ -63,6 +63,12 @@ Plugin 'pangloss/vim-javascript'
 " React
 Plugin 'mxw/vim-jsx'
 
+" Test the code
+Plugin 'scrooloose/syntastic'
+
+" Json
+Plugin 'elzr/vim-json'
+
 call vundle#end()            " required
 filetype plugin indent on    " required
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -212,7 +218,7 @@ let g:lightline = {
       \ 'colorscheme': 'solarized',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'filename' ], ['ctrlpmark'] ],
-      \   'right': [ [ 'lineinfo', 'percent'], [ 'bufferline' ] ]
+      \   'right': [ [ 'syntastic' ], [ 'lineinfo', 'percent'], [ 'bufferline' ] ]
       \ },
       \ 'component_function': {
       \   'filename': 'LightLineFilename',
@@ -220,6 +226,12 @@ let g:lightline = {
       \   'ctrlpmark': 'CtrlPMark',
       \   'bufferline': 'LightLineBufferline',
       \   'mode': 'LightLineMode'
+      \ },
+      \ 'component_expand': {
+      \   'syntastic': 'SyntasticStatuslineFlag',
+      \ },
+      \ 'component_type': {
+      \   'syntastic': 'error',
       \ }
       \ }
 
@@ -286,6 +298,15 @@ function! CtrlPStatusFunc_2(str)
   return lightline#statusline(0)
 endfunction
 
+augroup AutoSyntastic
+  autocmd!
+  autocmd BufWritePost *.c,*.cpp call s:syntastic()
+augroup END
+function! s:syntastic()
+  SyntasticCheck
+  call lightline#update()
+endfunction
+
 " Ctrl-P
 let g:ctrlp_by_filename = 1
 let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:5,results:5'
@@ -330,3 +351,16 @@ let g:numbers_exclude = ['nerdtree']
 
 " React
 let g:jsx_ext_required = 0
+
+" Syntastic
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+let g:syntastic_javascript_checkers = ['jsxhint']
+let g:syntastic_javascript_jsxhint_exec = 'jsx-jshint-wrapper'
