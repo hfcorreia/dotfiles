@@ -1,7 +1,12 @@
 #!/bin/zsh
 
 DOTFILES=$HOME/.dotfiles
+if [ ! -d "$DOTFILES" ]; then
+  mkidir "$DOTFILES"
+fi
+
 cd $DOTFILES
+
 set -e
 
 info () {
