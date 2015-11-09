@@ -72,6 +72,9 @@ Plugin 'elzr/vim-json'
 " Delimate
 Plugin 'Raimondi/delimitMate'
 
+" Surround vim
+Plugin 'tpope/vim-surround'
+
 call vundle#end()            " required
 filetype plugin indent on    " required
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
