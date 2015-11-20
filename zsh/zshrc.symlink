@@ -9,7 +9,7 @@ export UPDATE_ZSH_DAYS=10
 ENABLE_CORRECTION="true"
 #
 # Oh-my-zsh plugins to load
-plugins=(git brew brew-cask colored-man gem npm rvm)
+plugins=(git brew brew-cask colored-man gem npm rvm bower)
 
 # Load all of the zsh relevant files
 source $ZSH/oh-my-zsh.sh
