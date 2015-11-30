@@ -1,9 +1,0 @@
-#!/bin/zsh
-# change branch
-
-if [[ ARGC -ne 1 ]]; then
-  print "Invalid usage: toogle-branch <branch-name>"
-  exit 1
-fi
-
-git checkout "$1"

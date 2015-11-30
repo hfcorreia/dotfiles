@@ -1,9 +1,0 @@
-#!/bin/zsh
-# push to origin branch
-
-if [[ ARGC -ne 1 ]]; then
-  print "Invalid usage: push <branch-name>"
-  exit 1
-fi
-
-git push origin "$1"
