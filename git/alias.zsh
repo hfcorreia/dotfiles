@@ -6,3 +6,6 @@ alias gstat='git st'
 # Quick change to known branches
 alias gmaster='git checkout master && gpull'
 alias gstaging='git checkout staging && gpull'
+
+# Quickly create a new branch
+alias gcreate='git checkout -b '
