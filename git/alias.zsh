@@ -9,3 +9,6 @@ alias gstaging='git checkout staging && gpull'
 
 # Quickly create a new branch
 alias gcreate='git checkout -b '
+
+# Quick merges
+alias gmerge='git merge '
