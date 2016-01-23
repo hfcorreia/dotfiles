@@ -98,6 +98,12 @@ update () {
   success 'Plugins Updated'
 }
 
+push () {
+  info 'Push Changes'
+  $(git push origin master)
+  success 'Plugins Updated'
+}
+
 run_install () {
   local action=
 
@@ -107,6 +113,7 @@ run_install () {
       \n\t[i]nstall - clean install (overides existing symlinks)\
       \n\t[u]pdate  - add missing symlinks, update submodules and vim plugins\
       \n\t[c]ommit - commit all changes\
+      \n\t[p]ush - push all changes\
       \n\t[e]exit   - exit without doing nothing"
     printf "   > "
     read action
@@ -117,6 +124,8 @@ run_install () {
       update
     elif [[ "$action" == "c" ]]; then
       commit
+    elif [[ "$action" == "p" ]]; then
+      push
     elif [[ "$action" == "e" ]]; then
       echo '  All done!'
       echo ''
