@@ -79,9 +79,11 @@ commit () {
   info 'Repo changes:'
   echo "$(git status --porcelain | sed -e 's/\(\n|\r\)/\t\1/g')"
   user 'Confirm changes? [y/n]'
+  printf "   > "
   read yes
   if [[ "$yes" == "y" ]]; then
     user 'Enter the commit message:'
+    printf "   > "
     read message
     $(git commit -a -m $message &> /dev/null)
   fi
