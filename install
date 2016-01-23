@@ -76,14 +76,12 @@ install() {
 commit () {
   local message=
   local yes=
-  info 'Changes:'
-  echo ''
+  info 'Repo changes:'
   echo "$(git status --porcelain | sed -e 's/\(\n|\r\)/\t\1/g')"
-  echo ''
-  info 'Confirm changes? [y/n]'
+  user 'Confirm changes? [y/n]'
   read yes
   if [[ "$yes" == "y" ]]; then
-    info 'Enter the commit message:'
+    user 'Enter the commit message:'
     read message
     $(git commit -a -m $message &> /dev/null)
   fi
