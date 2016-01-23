@@ -81,6 +81,9 @@ Plugin 'SirVer/ultisnips'
 " Wakatime
 Plugin 'wakatime/vim-wakatime'
 
+" Editor Config
+Plugin 'editorconfig/editorconfig-vim'
+
 call vundle#end()            " required
 filetype plugin indent on    " required
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -381,3 +384,7 @@ let g:UltiSnipsEditSplit="vertical"
 let g:UltiSnipsExpandTrigger="<C-SPACE>"
 let g:UltiSnipsJumpForwardTrigger="<TAB>"
 let g:UltiSnipsJumpBackwardTrigger="<S-TAB>"
+
+let g:vim_json_syntax_conceal = 0
+
+let g:EditorConfig_exclude_patterns = ['fugitive://.*']

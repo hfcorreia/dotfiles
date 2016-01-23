@@ -24,10 +24,10 @@ success () {
 fail () {
   printf "\r\033[2K  [\033[0;31mFAIL\033[0m] $1\n"
   echo ''
-  exit
 }
 
 install_dotfiles () {
+  info 'Installing Dotfiles'
   for src in $(find -H "$DOTFILES" -name '*.symlink'); do
     dst="$HOME/.$(basename "${src%.*}")"
 
@@ -62,39 +62,69 @@ update_submodules () {
   $(git submodule update --remote &> /dev/null)
 }
 
-run_install () {
-  local action=
-  echo ''
-  user "Dotfiles: What do you want to do?\
-    \n\t[i]nstall - clean install (overides existing symlinks)\
-    \n\t[u]pdate  - add missing symlinks, update submodules and vim plugins\
-    \n\t[e]exit   - exit without doing nothing"
-  printf "   > "
-  read action
+install() {
+  update_submodules
+  install_dotfiles
 
-  if [[ "$action" == "i" ]]; then
-    update_submodules
-    info 'Installing Dotfiles'
-    install_dotfiles
-    info 'Installing Vim plugins'
-    [[ ! -d "$HOME/.vim" ]] && mkdir "$HOME/.vim" && info 'Creating .vim folder'
-    $(vim +PluginInstall +qall &> /dev/null)
-    success 'Plugins installed'
-  elif [[ "$action" == "u" ]]; then
-    update_submodules
-    info 'Updating Dotfiles'
-    update_dotfiles
-    info 'Updating Vim plugins'
-    $(vim +PluginUpdate +qall &> /dev/null)
-    success 'Plugins Updated'
-  elif [[ "$action" == "e" ]]; then
-    exit
-  else
-    fail "Invalid command!"
-  fi
+  info 'Installing Vim plugins'
+  [[ ! -d "$HOME/.vim" ]] && mkdir "$HOME/.vim" && info 'Creating .vim folder'
+  $(vim +PluginInstall +qall &> /dev/null)
 
-  echo '  All installed!'
-  echo ''
+  success 'Plugins installed'
 }
 
+commit () {
+  local message=
+  local yes=
+  info 'Changes:'
+  echo ''
+  echo "$(git status --porcelain | sed -e 's/\(\n|\r\)/\t\1/g')"
+  echo ''
+  info 'Confirm changes? [y/n]'
+  read yes
+  if [[ "$yes" == "y" ]]; then
+    info 'Enter the commit message:'
+    read message
+    $(git commit -a -m $message &> /dev/null)
+  fi
+}
+
+update () {
+  update_submodules
+  info 'Updating Dotfiles'
+  update_dotfiles
+  info 'Updating Vim plugins'
+  $(vim +PluginUpdate +qall &> /dev/null)
+  success 'Plugins Updated'
+}
+
+run_install () {
+  local action=
+
+  while [[ true ]]; do
+    echo ''
+    user "Dotfiles: What do you want to do?\
+      \n\t[i]nstall - clean install (overides existing symlinks)\
+      \n\t[u]pdate  - add missing symlinks, update submodules and vim plugins\
+      \n\t[c]ommit - commit all changes\
+      \n\t[e]exit   - exit without doing nothing"
+    printf "   > "
+    read action
+
+    if [[ "$action" == "i" ]]; then
+      install
+    elif [[ "$action" == "u" ]]; then
+      update
+    elif [[ "$action" == "c" ]]; then
+      commit
+    elif [[ "$action" == "e" ]]; then
+      echo '  All done!'
+      echo ''
+      exit
+    else
+      fail "Invalid command!"
+    fi
+  done
+
+}
 run_install
