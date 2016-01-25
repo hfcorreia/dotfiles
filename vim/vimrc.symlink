@@ -16,7 +16,7 @@ Plugin 'VundleVim/Vundle.vim'
 Plugin 'tpope/vim-fugitive'
 
 " Solarized colorscheme
-Plugin 'altercation/vim-colors-solarized'
+Plugin 'zenorocha/dracula-theme', {'rtp': 'vim/'}
 
 " Status line
 Plugin 'itchyny/lightline.vim'
@@ -58,7 +58,7 @@ Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-haml'
 
 " JavaScript
-Plugin 'pangloss/vim-javascript'
+Plugin 'jelera/vim-javascript-syntax'
 
 " React
 Plugin 'mxw/vim-jsx'
@@ -159,7 +159,7 @@ set complete+=kspell
 syntax on
 
 " Enable Solarized colorschem
-silent!  colorscheme solarized
+silent!  color dracula
 
 " Set background
 set background=dark
@@ -230,7 +230,7 @@ map <leader>i mzgg=G`z<CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Lightline
 let g:lightline = {
-      \ 'colorscheme': 'solarized',
+      \ 'colorscheme': 'dracula',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'filename' ], ['ctrlpmark'] ],
       \   'right': [ [ 'syntastic' ], [ 'lineinfo', 'percent'], [ 'bufferline' ] ]
