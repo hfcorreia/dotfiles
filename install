@@ -85,7 +85,8 @@ commit () {
     user 'Enter the commit message:'
     printf "   > "
     read message
-    $(git commit -a -m $message &> /dev/null)
+    $(git add -A)
+    success $(git commit -m "$message")
   fi
 }
 
