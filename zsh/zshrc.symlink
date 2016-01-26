@@ -2,8 +2,10 @@
 export DOTFILES=$HOME/.dotfiles
 export ZSH=$DOTFILES/zsh/.oh-my-zsh
 
+ZSH_CUSTOM=$DOTFILES/zsh/custom/
+
 # Set name of the theme to load.
-ZSH_THEME="simple"
+ZSH_THEME="dracula"
 CASE_SENSITIVE="false"
 export UPDATE_ZSH_DAYS=10
 ENABLE_CORRECTION="true"
