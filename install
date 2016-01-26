@@ -86,7 +86,7 @@ commit () {
     printf "   > "
     read message
     $(git add -A)
-    success $(git commit -m "$message")
+    success "\n$(git commit -m "$message")"
   fi
 }
 
