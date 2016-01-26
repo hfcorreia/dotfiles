@@ -24,9 +24,6 @@ Plugin 'itchyny/lightline.vim'
 " Fuzzy finder
 Plugin 'kien/ctrlp.vim'
 
-" Rainbow parenthesis
-Plugin 'kien/rainbow_parentheses.vim'
-
 " Supertab completion
 Plugin 'ervandew/supertab'
 
@@ -59,6 +56,8 @@ Plugin 'tpope/vim-haml'
 
 " JavaScript
 Plugin 'jelera/vim-javascript-syntax'
+Plugin 'pangloss/vim-javascript'
+Plugin 'othree/javascript-libraries-syntax.vim'
 
 " React
 Plugin 'mxw/vim-jsx'
@@ -324,27 +323,12 @@ endfunction
 
 " Ctrl-P
 let g:ctrlp_by_filename = 1
+let g:ctrlp_regexp = 1
 let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:5,results:5'
-
-" Rainbow
-let g:rbpt_colorpairs = [
-      \ [ '13', '#6c71c4'],
-      \ [ '5',  '#d33682'],
-      \ [ '1',  '#dc322f'],
-      \ [ '9',  '#cb4b16'],
-      \ [ '3',  '#b58900'],
-      \ [ '2',  '#859900'],
-      \ [ '6',  '#2aa198'],
-      \ [ '4',  '#268bd2'],
-      \ ]
-
-augroup rainbow_parentheses
-  au!
-  au VimEnter * RainbowParenthesesActivate
-  au BufEnter * RainbowParenthesesLoadRound
-  au BufEnter * RainbowParenthesesLoadSquare
-  au BufEnter * RainbowParenthesesLoadBraces
-augroup END
+let g:ctrlp_switch_buffer = 'E'
+let g:ctrlp_working_path_mode = 'rwa'
+let g:ctrlp_use_caching = 1
+let g:ctrlp_show_hidden = 1
 
 " IdentLine
 let g:indentLine_char = '|'
@@ -388,3 +372,6 @@ let g:UltiSnipsJumpBackwardTrigger="<S-TAB>"
 let g:vim_json_syntax_conceal = 0
 
 let g:EditorConfig_exclude_patterns = ['fugitive://.*']
+
+" Js Libs
+let g:used_javascript_libs = 'jquery,flux,underscore,react,jasmine,chai'
