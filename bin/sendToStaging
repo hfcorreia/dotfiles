@@ -1,0 +1,25 @@
+#!/bin/zsh
+# lauch a python http server
+
+
+BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
+local yes=
+
+git checkout master
+git pull origin master
+git checkout $BRANCH_NAME
+git rebase master
+
+printf 'Confirm rebase? [yes/n]'
+printf "   > "
+read yes
+if [[ "$yes" == "yes" ]]; then
+  git push origin $BRANCH_NAME -f
+  git checkout master
+  git merge $BRANCH_NAME --no-ff
+  git push origin master
+  git checkout staging
+  git pull origin staging
+  git merge master
+  git push origin staging
+fi

@@ -1,0 +1,13 @@
+#!/bin/zsh
+# lauch a python http server
+
+if [[ ARGC -ne 1 ]]; then
+  print "Invalid usage: startIssue <issue-name>"
+  exit 1
+fi
+
+git checkout staging
+git pull origin staging
+git checkout master
+git pull origin master
+git checkout -b $1
