@@ -55,8 +55,8 @@ Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-haml'
 
 " JavaScript
-Plugin 'jelera/vim-javascript-syntax'
 Plugin 'pangloss/vim-javascript'
+Plugin 'othree/yajs.vim'
 Plugin 'othree/javascript-libraries-syntax.vim'
 
 " React
@@ -82,6 +82,22 @@ Plugin 'wakatime/vim-wakatime'
 
 " Editor Config
 Plugin 'editorconfig/editorconfig-vim'
+
+" Display tags in a side tagbar
+Plugin 'majutsushi/tagbar'
+
+" Add ctags support
+Plugin 'xolox/vim-easytags'
+Plugin 'xolox/vim-misc'
+
+" JavaScript EasyTags
+Plugin 'ternjs/tern_for_vim'
+
+" Node Support for vim
+Plugin 'moll/vim-node'
+
+" Ruby Support
+Plugin 'vim-ruby/vim-ruby'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -296,9 +312,9 @@ function! CtrlPMark()
 endfunction
 
 let g:ctrlp_status_func = {
-  \ 'main': 'CtrlPStatusFunc_1',
-  \ 'prog': 'CtrlPStatusFunc_2'
-\ }
+      \ 'main': 'CtrlPStatusFunc_1',
+      \ 'prog': 'CtrlPStatusFunc_2'
+      \ }
 
 function! CtrlPStatusFunc_1(focus, byfname, regex, prev, item, next, marked)
   let g:lightline.ctrlp_regex = a:regex
@@ -324,17 +340,19 @@ endfunction
 " Ctrl-P
 let g:ctrlp_by_filename = 1
 let g:ctrlp_regexp = 1
-let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:5,results:5'
 let g:ctrlp_switch_buffer = 'E'
-let g:ctrlp_working_path_mode = 'rwa'
 let g:ctrlp_use_caching = 1
 let g:ctrlp_show_hidden = 1
+let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
 
 " IdentLine
 let g:indentLine_char = '|'
 
 " NERDTree
 map <Leader><tab> :NERDTreeToggle<CR>
+
+" Tagbar
+nmap <Leader>i :TagbarToggle<CR>
 
 " EasyMotion
 let g:EasyMotion_use_upper = 1
@@ -346,7 +364,7 @@ map <Leader>j <Plug>(easymotion-j)
 map <Leader>k <Plug>(easymotion-k)
 
 " Numbers
-let g:numbers_exclude = ['nerdtree']
+let g:numbers_exclude = ['nerdtree', 'tagbar']
 
 " React
 let g:jsx_ext_required = 0
