@@ -12,11 +12,11 @@ call vundle#begin()
 " Manage the plugins
 Plugin 'VundleVim/Vundle.vim'
 
+" Colorscheme
+Plugin 'vim-scripts/wombat256.vim'
+
 " Git wrapper
 Plugin 'tpope/vim-fugitive'
-
-" Solarized colorscheme
-Plugin 'zenorocha/dracula-theme', {'rtp': 'vim/'}
 
 " Status line
 Plugin 'itchyny/lightline.vim'
@@ -26,9 +26,6 @@ Plugin 'kien/ctrlp.vim'
 
 " Supertab completion
 Plugin 'ervandew/supertab'
-
-" Identation guidlines
-Plugin 'Yggdroot/indentLine'
 
 " Easy comments
 Plugin 'scrooloose/nerdcommenter'
@@ -83,16 +80,6 @@ Plugin 'wakatime/vim-wakatime'
 " Editor Config
 Plugin 'editorconfig/editorconfig-vim'
 
-" Display tags in a side tagbar
-Plugin 'majutsushi/tagbar'
-
-" Add ctags support
-Plugin 'xolox/vim-easytags'
-Plugin 'xolox/vim-misc'
-
-" JavaScript EasyTags
-Plugin 'ternjs/tern_for_vim'
-
 " Node Support for vim
 Plugin 'moll/vim-node'
 
@@ -104,10 +91,6 @@ filetype plugin indent on    " required
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " General Config
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Enable filetype plugin
-filetype plugin on
-filetype indent on
-
 " Set default shell
 set shell=/bin/zsh
 
@@ -154,6 +137,8 @@ set tm=500
 
 " Always display status line
 set laststatus=2
+
+set textwidth=10
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Text files config
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -174,7 +159,7 @@ set complete+=kspell
 syntax on
 
 " Enable Solarized colorschem
-silent!  color dracula
+silent! colorscheme wombat256mod
 
 " Set background
 set background=dark
@@ -241,11 +226,15 @@ map <C-l> <C-W>l
 " List Buffer
 map <leader>i mzgg=G`z<CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Memory Config
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set maxmempattern=2000000
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugins Config
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Lightline
 let g:lightline = {
-      \ 'colorscheme': 'jellybeans',
+      \ 'colorscheme': 'wombat',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'filename' ], ['ctrlpmark'] ],
       \   'right': [ [ 'syntastic' ], [ 'lineinfo', 'percent'], [ 'bufferline' ] ]
@@ -351,9 +340,6 @@ let g:indentLine_char = '|'
 " NERDTree
 map <Leader><tab> :NERDTreeToggle<CR>
 
-" Tagbar
-nmap <Leader>i :TagbarToggle<CR>
-
 " EasyMotion
 let g:EasyMotion_use_upper = 1
 let g:EasyMotion_smartcase = 1
@@ -364,7 +350,7 @@ map <Leader>j <Plug>(easymotion-j)
 map <Leader>k <Plug>(easymotion-k)
 
 " Numbers
-let g:numbers_exclude = ['nerdtree', 'tagbar']
+let g:numbers_exclude = ['nerdtree']
 
 " React
 let g:jsx_ext_required = 0
@@ -386,8 +372,6 @@ let g:UltiSnipsEditSplit="vertical"
 let g:UltiSnipsExpandTrigger="<C-SPACE>"
 let g:UltiSnipsJumpForwardTrigger="<TAB>"
 let g:UltiSnipsJumpBackwardTrigger="<S-TAB>"
-
-let g:vim_json_syntax_conceal = 0
 
 let g:EditorConfig_exclude_patterns = ['fugitive://.*']
 
