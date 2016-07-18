@@ -48,17 +48,6 @@ Plugin 'bling/vim-bufferline'
 " Repeat
 Plugin 'tpope/vim-repeat'
 
-" CSS, SASS runtime files
-Plugin 'tpope/vim-haml'
-
-" JavaScript
-Plugin 'pangloss/vim-javascript'
-Plugin 'othree/yajs.vim'
-Plugin 'othree/javascript-libraries-syntax.vim'
-
-" React
-Plugin 'mxw/vim-jsx'
-
 " Test the code
 Plugin 'scrooloose/syntastic'
 
@@ -71,20 +60,11 @@ Plugin 'Raimondi/delimitMate'
 " Surround vim
 Plugin 'tpope/vim-surround'
 
-" Ultisnipets
-Plugin 'SirVer/ultisnips'
-
 " Wakatime
 Plugin 'wakatime/vim-wakatime'
 
 " Editor Config
 Plugin 'editorconfig/editorconfig-vim'
-
-" Node Support for vim
-Plugin 'moll/vim-node'
-
-" Ruby Support
-Plugin 'vim-ruby/vim-ruby'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -326,14 +306,6 @@ function! s:syntastic()
   call lightline#update()
 endfunction
 
-" Ctrl-P
-let g:ctrlp_by_filename = 1
-let g:ctrlp_regexp = 1
-let g:ctrlp_switch_buffer = 'E'
-let g:ctrlp_use_caching = 1
-let g:ctrlp_show_hidden = 1
-let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
-
 " IdentLine
 let g:indentLine_char = '|'
 
@@ -352,9 +324,6 @@ map <Leader>k <Plug>(easymotion-k)
 " Numbers
 let g:numbers_exclude = ['nerdtree']
 
-" React
-let g:jsx_ext_required = 0
-
 " Syntastic
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
@@ -367,13 +336,4 @@ let g:syntastic_check_on_wq = 0
 
 let g:syntastic_javascript_checkers = ['eslint']
 
-" Ultisnips config
-let g:UltiSnipsEditSplit="vertical"
-let g:UltiSnipsExpandTrigger="<C-SPACE>"
-let g:UltiSnipsJumpForwardTrigger="<TAB>"
-let g:UltiSnipsJumpBackwardTrigger="<S-TAB>"
-
 let g:EditorConfig_exclude_patterns = ['fugitive://.*']
-
-" Js Libs
-let g:used_javascript_libs = 'jquery,flux,underscore,react,jasmine,chai'
