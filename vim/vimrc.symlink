@@ -18,9 +18,6 @@ Plugin 'vim-scripts/wombat256.vim'
 " Git wrapper
 Plugin 'tpope/vim-fugitive'
 
-" Status line
-Plugin 'itchyny/lightline.vim'
-
 " Fuzzy finder
 Plugin 'kien/ctrlp.vim'
 
@@ -42,17 +39,11 @@ Plugin 'myusuf3/numbers.vim'
 " Fix whitespace
 Plugin 'bronson/vim-trailing-whitespace'
 
-" Line with buffer names
-Plugin 'bling/vim-bufferline'
-
 " Repeat
 Plugin 'tpope/vim-repeat'
 
 " Test the code
 Plugin 'scrooloose/syntastic'
-
-" Json
-Plugin 'elzr/vim-json'
 
 " Delimate
 Plugin 'Raimondi/delimitMate'
@@ -66,6 +57,15 @@ Plugin 'wakatime/vim-wakatime'
 " Editor Config
 Plugin 'editorconfig/editorconfig-vim'
 
+" Add airline
+Plugin 'bling/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
+
+" Line with buffer names
+Plugin 'bling/vim-bufferline'
+
+" Gutter
+Plugin 'airblade/vim-gitgutter'
 call vundle#end()            " required
 filetype plugin indent on    " required
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -118,7 +118,7 @@ set tm=500
 " Always display status line
 set laststatus=2
 
-set textwidth=10
+set textwidth=100
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Text files config
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -212,105 +212,11 @@ set maxmempattern=2000000
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugins Config
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Lightline
-let g:lightline = {
-      \ 'colorscheme': 'wombat',
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'filename' ], ['ctrlpmark'] ],
-      \   'right': [ [ 'syntastic' ], [ 'lineinfo', 'percent'], [ 'bufferline' ] ]
-      \ },
-      \ 'component_function': {
-      \   'filename': 'LightLineFilename',
-      \   'fugitive': 'LightLineFugitive',
-      \   'ctrlpmark': 'CtrlPMark',
-      \   'bufferline': 'LightLineBufferline',
-      \   'mode': 'LightLineMode'
-      \ },
-      \ 'component_expand': {
-      \   'syntastic': 'SyntasticStatuslineFlag',
-      \ },
-      \ 'component_type': {
-      \   'syntastic': 'error',
-      \ }
-      \ }
-
-let g:bufferline_echo = 0
-function! LightLineBufferline()
-  call bufferline#refresh_status()
-  let b = g:bufferline_status_info.before
-  let c = g:bufferline_status_info.current
-  let a = g:bufferline_status_info.after
-  return b . c . a
-endfunction
-
-function! LightLineMode()
-  let fname = expand('%:t')
-  return  fname == 'ControlP' ? 'CtrlP' :
-        \ fname =~ 'NERD_tree' ? 'NERDTree' :
-        \ winwidth(0) > 60 ? lightline#mode() : ''
-endfunction
-
-function! LightLineModified()
-  if &filetype == "help"
-    return ""
-  elseif &modified
-    return "+"
-  elseif &modifiable
-    return ""
-  else
-    return ""
-  endif
-endfunction
-
-function! LightLineFilename()
-  return ('' != expand('%:t') ? expand('%:t') : '[No Name]') .
-        \ ('' != LightLineModified() ? ' ' . LightLineModified() : '')
-endfunction
-
-function! LightLineFugitive()
-  return exists('*fugitive#head') ? fugitive#head() : ''
-endfunction
-
-function! CtrlPMark()
-  if expand('%:t') =~ 'ControlP'
-    call lightline#link('iR'[g:lightline.ctrlp_regex])
-    return lightline#concatenate([g:lightline.ctrlp_prev, g:lightline.ctrlp_item , g:lightline.ctrlp_next], 0)
-  else
-    return ''
-  endif
-endfunction
-
-let g:ctrlp_status_func = {
-      \ 'main': 'CtrlPStatusFunc_1',
-      \ 'prog': 'CtrlPStatusFunc_2'
-      \ }
-
-function! CtrlPStatusFunc_1(focus, byfname, regex, prev, item, next, marked)
-  let g:lightline.ctrlp_regex = a:regex
-  let g:lightline.ctrlp_prev = a:prev
-  let g:lightline.ctrlp_item = a:item
-  let g:lightline.ctrlp_next = a:next
-  return lightline#statusline(0)
-endfunction
-
-function! CtrlPStatusFunc_2(str)
-  return lightline#statusline(0)
-endfunction
-
-augroup AutoSyntastic
-  autocmd!
-  autocmd BufWritePost *.c,*.cpp call s:syntastic()
-augroup END
-function! s:syntastic()
-  SyntasticCheck
-  call lightline#update()
-endfunction
-
 " IdentLine
 let g:indentLine_char = '|'
 
 " NERDTree
-map <Leader><tab> :NERDTreeToggle<CR>
+map <Leader>, :NERDTreeToggle<CR>
 
 " EasyMotion
 let g:EasyMotion_use_upper = 1
@@ -325,15 +231,17 @@ map <Leader>k <Plug>(easymotion-k)
 let g:numbers_exclude = ['nerdtree']
 
 " Syntastic
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
-let g:syntastic_javascript_checkers = ['eslint']
-
 let g:EditorConfig_exclude_patterns = ['fugitive://.*']
+
+" Airline
+let g:airline#extensions#tabline#left_sep = ' '
+let g:airline#extensions#tabline#left_alt_sep = '|'
+let g:airline_left_sep=''
+let g:airline_right_sep=''
+let g:airline_theme='wombat'
+let g:airline#extensions#bufferline#enabled = 1
