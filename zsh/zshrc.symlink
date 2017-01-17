@@ -3,13 +3,13 @@ export DOTFILES=$HOME/.dotfiles
 export ZSH=$DOTFILES/zsh/.oh-my-zsh
 
 # Set name of the theme to load.
-ZSH_THEME="frisk"
+ZSH_THEME="avit"
 CASE_SENSITIVE="false"
 export UPDATE_ZSH_DAYS=10
 ENABLE_CORRECTION="true"
 #
 # Oh-my-zsh plugins to load
-plugins=(git brew brew-cask colored-man gem npm rvm bower)
+plugins=(git brew brew-cask colored-man gem npm rvm bower last-working-dir)
 
 # Load all of the zsh relevant files
 source $ZSH/oh-my-zsh.sh
@@ -36,3 +36,6 @@ do
 done
 
 unset config_files
+
+export NVM_DIR="/Users/hugocorreia/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
