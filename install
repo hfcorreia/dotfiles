@@ -62,10 +62,6 @@ install() {
   update_submodules
   install_dotfiles
 
-  info 'Installing Vim plugins'
-  [[ ! -d "$HOME/.vim" ]] && mkdir "$HOME/.vim" && info 'Creating .vim folder'
-  $(vim +PluginInstall +qall &> /dev/null)
-
   success 'Plugins installed'
 }
 
@@ -90,8 +86,6 @@ update () {
   update_submodules
   info 'Updating Dotfiles'
   update_dotfiles
-  info 'Updating Vim plugins'
-  $(vim +PluginUpdate +qall &> /dev/null)
   success 'Plugins Updated'
 }
 
@@ -108,7 +102,7 @@ run_install () {
     echo ''
     user "Dotfiles: What do you want to do?\
       \n\t[i]nstall - clean install (overides existing symlinks)\
-      \n\t[u]pdate  - add missing symlinks, update submodules and vim plugins\
+      \n\t[u]pdate  - add missing symlinks, update submodules\
       \n\t[c]ommit  - commit all changes\
       \n\t[p]ush    - push all changes\
       \n\t[e]exit   - exit without doing nothing"
