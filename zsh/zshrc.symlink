@@ -15,9 +15,9 @@ plugins=(git colored-man last-working-dir docker)
 source $ZSH/oh-my-zsh.sh
 
 # Check for local definitions
-if [[ -a $HOME/.localrc ]]
+if [[ -a $HOME/.local/.localrc ]]
 then
-    source $HOME/.localrc
+    source $HOME/.local/localrc
 fi
 
 typeset -U config_files
