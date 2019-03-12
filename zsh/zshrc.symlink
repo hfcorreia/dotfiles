@@ -17,7 +17,7 @@ source $ZSH/oh-my-zsh.sh
 # Check for local definitions
 if [[ -a $HOME/.local/.localrc ]]
 then
-    source $HOME/.local/localrc
+    source $HOME/.local/.localrc
 fi
 
 typeset -U config_files
