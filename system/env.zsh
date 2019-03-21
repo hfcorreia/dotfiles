@@ -4,3 +4,6 @@ export LC_ALL=en_US.UTF-8
 
 # Use vim as default editor
 export EDITOR="vim"
+
+# Hookup direnv
+eval "$(direnv hook zsh)"
