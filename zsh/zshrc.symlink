@@ -6,8 +6,7 @@ export ZSH=$DOTFILES/zsh/.oh-my-zsh
 ZSH_THEME="avit"
 CASE_SENSITIVE="false"
 export UPDATE_ZSH_DAYS=10
-ENABLE_CORRECTION="true"
-#
+unsetopt correct_all
 # Oh-my-zsh plugins to load
 plugins=(git colored-man last-working-dir docker kubectl docker-compose)
 
