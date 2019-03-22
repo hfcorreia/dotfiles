@@ -34,6 +34,7 @@
   branch = auto
 [core]
   editor = vim
+  excludesfile = ~/.gitignore
 [init]
   templatedir = ~/.dotfiles/git/templates
 [help]
@@ -41,12 +42,14 @@
 [mergetool]
   keepBackup = false
 [merge]
-  tool = vimdiff
+  tool = vscode
 [user]
   name = Hugo Correia
   email = hfcorreia91@gmail.com
 [difftool]
-	tool = vimdiff
+	tool = vscode
 	prompt = false
+[difftool "vscode"]
+  cmd = code --wait --diff $LOCAL $REMOTE
 [push]
 	default = simple
