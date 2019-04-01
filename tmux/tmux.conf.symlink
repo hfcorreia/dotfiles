@@ -1,0 +1,7 @@
+# Reload conf
+bind r source ~/.tmux.conf\; display "~/.tmux.conf sourced!"
+
+# Vi copypaste mode
+set-window-option -g mode-keys vi
+bind-key -t vi-copy 'v' begin-selection
+bind-key -t vi-copy 'y' copy-selection
