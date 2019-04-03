@@ -7,3 +7,6 @@ export EDITOR="code"
 
 # Hookup direnv
 eval "$(direnv hook zsh)"
+
+# Startup dinghy
+eval "$(dinghy env)"
