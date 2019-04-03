@@ -11,16 +11,16 @@ export UPDATE_ZSH_DAYS=10
 unsetopt correct_all
 
 # Oh-my-zsh plugins to load
-plugins=(git colored-man last-working-dir docker kubectl docker-compose bundle)
+plugins=(git vi-mode last-working-dir docker kubectl docker-compose bundle)
 
 # Load all of the zsh relevant files
 source $ZSH/oh-my-zsh.sh
 
 # Check for local definitions
-if [[ -a $HOME/.local/.localrc ]]
-then
-    source $HOME/.local/.localrc
-fi
+for file in $(find $HOME/.local -type f)
+do
+    source $file
+done
 
 typeset -U config_files
 config_files=($DOTFILES/**/*.zsh)
@@ -38,3 +38,4 @@ do
 done
 
 unset config_files
+
