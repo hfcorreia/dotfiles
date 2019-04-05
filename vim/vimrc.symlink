@@ -48,7 +48,7 @@ set tm=500
 " Always display status line
 set laststatus=2
 
-set textwidth=100
+set textwidth=80
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Text files config
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -129,10 +129,25 @@ map <C-j> <C-W>j
 map <C-k> <C-W>k
 map <C-h> <C-W>h
 map <C-l> <C-W>l
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugins
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Install vim-plug if not available
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+        \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
 
-" List Buffer
-map <leader>i mzgg=G`z<CR>
+" List of plugins to install
+call plug#begin('~/.vim/plugged')
+Plug 'airblade/vim-gitgutter'
+Plug 'scrooloose/nerdtree'
+Plug 'tpope/vim-surround'
+Plug 'vim-ruby/vim-ruby'
+call plug#end()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Memory Config
+" Plugins Config
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set maxmempattern=2000000
+" NERDTree
+map <Leader>, :NERDTreeToggle<CR>

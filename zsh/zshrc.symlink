@@ -11,7 +11,7 @@ export UPDATE_ZSH_DAYS=10
 unsetopt correct_all
 
 # Oh-my-zsh plugins to load
-plugins=(git vi-mode last-working-dir docker kubectl docker-compose bundle)
+plugins=(git vi-mode last-working-dir docker kubectl docker-compose)
 
 # Load all of the zsh relevant files
 source $ZSH/oh-my-zsh.sh
