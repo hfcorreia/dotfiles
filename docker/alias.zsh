@@ -1,5 +1,5 @@
 function dsh() {
-    docker exec -it $1 bash
+  docker exec -it $1 bash
 }
 
 autoload dsh
