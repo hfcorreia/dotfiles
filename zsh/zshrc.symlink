@@ -11,31 +11,31 @@ export UPDATE_ZSH_DAYS=10
 unsetopt correct_all
 
 # Oh-my-zsh plugins to load
-plugins=(git vi-mode last-working-dir docker kubectl docker-compose)
+plugins=(
+  git vi-mode last-working-dir
+  docker kubectl docker-compose
+  node npm
+)
 
 # Load all of the zsh relevant files
 source $ZSH/oh-my-zsh.sh
 
 # Check for local definitions
-for file in $(find $HOME/.local -type f)
-do
-    source $file
+for file in $(find $HOME/.local -type f); do
+  source $file
 done
 
 typeset -U config_files
 config_files=($DOTFILES/**/*.zsh)
 
 # load the path files
-for file in ${(M)config_files:#*/path.zsh}
-do
+for file in ${(M)config_files:#*/path.zsh}; do
   source $file
 done
 
 # load everything but the path and completion files
-for file in ${config_files:#*/path.zsh}
-do
+for file in ${config_files:#*/path.zsh}; do
   source $file
 done
 
 unset config_files
-
