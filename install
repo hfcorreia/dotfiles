@@ -125,6 +125,5 @@ run_install () {
       fail "Invalid command!"
     fi
   done
-
 }
 run_install
