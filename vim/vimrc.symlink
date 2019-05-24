@@ -18,8 +18,10 @@ set whichwrap+=<,>,h,l
 set ignorecase
 set smartcase
 
-" Incremental search
+" Improve search
+nnoremap <esc><esc> :noh<return>
 set incsearch
+set hlsearch
 
 " Show matching bracets
 set showmatch
@@ -49,6 +51,9 @@ set tm=500
 set laststatus=2
 
 set textwidth=80
+
+" Use the clipboard as default register
+set clipboard+=unnamed
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Text files config
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -144,13 +149,22 @@ call plug#begin('~/.vim/plugged')
 Plug 'airblade/vim-gitgutter'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'scrooloose/nerdtree'
+Plug 'yggdroot/indentline'
+
 Plug 'tpope/vim-abolish'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
 
 " Languages
+Plug 'sheerun/vim-polyglot'
 Plug 'vim-ruby/vim-ruby'
+
+" Linting
+Plug 'w0rp/ale'
 
 " Search Helpers
 Plug '/usr/local/opt/fzf'
@@ -160,4 +174,28 @@ call plug#end()
 " Plugins Config
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " NERDTree
-map <Leader>, :NERDTreeToggle<CR>
+function! NERDTreeToggleInCurDir()
+  " If NERDTree is open in the current buffer
+  if (exists("t:NERDTreeBufName") && bufwinnr(t:NERDTreeBufName) != -1)
+    exe ":NERDTreeClose"
+  else
+    exe ":NERDTreeFind"
+  endif
+endfunction
+nmap <silent> <leader>, :call NERDTreeToggleInCurDir()<cr>
+
+" FZF
+let g:fzf_layout = { 'down': '~20%' }
+
+map <c-p> :Files<CR>
+nnoremap <c-f> :Ag<Cr>
+imap <c-x><c-k> <plug>(fzf-complete-word)
+imap <c-x><c-f> <plug>(fzf-complete-path)
+imap <c-x><c-j> <plug>(fzf-complete-file-ag)
+imap <c-x><c-l> <plug>(fzf-complete-line)
+
+" Linter
+let g:ale_set_highlights = 0
+let g:ale_linters = {
+\  'ruby': ['rubocop', 'solargraph'],
+\ }
