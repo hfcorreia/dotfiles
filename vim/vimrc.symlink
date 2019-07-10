@@ -50,6 +50,7 @@ set tm=500
 " Always display status line
 set laststatus=2
 
+" Resize
 set textwidth=80
 
 " Use the clipboard as default register
@@ -162,6 +163,7 @@ Plug 'tpope/vim-surround'
 " Languages
 Plug 'sheerun/vim-polyglot'
 Plug 'vim-ruby/vim-ruby'
+Plug 'hashivim/vim-terraform'
 
 " Linting
 Plug 'w0rp/ale'
@@ -199,3 +201,6 @@ let g:ale_set_highlights = 0
 let g:ale_linters = {
 \  'ruby': ['rubocop', 'solargraph'],
 \ }
+
+" Terraform Configs
+let g:terraform_fmt_on_save=1
