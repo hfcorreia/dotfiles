@@ -7,3 +7,6 @@ alias gupstream='git branch --set-upstream-to=origin/$(git symbolic-ref --short 
 
 # Quick merges
 alias gmerge='git merge '
+
+# Quick toggle branch
+alias g-='git co -'
