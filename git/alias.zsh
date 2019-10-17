@@ -10,3 +10,5 @@ alias gmerge='git merge '
 
 # Quick toggle branch
 alias g-='git co -'
+
+alias amend!='git commit -a --amend --no-edit && git push --force-with-lease'

@@ -1,7 +1,39 @@
+# Set the prefix to C-a
+set -g prefix "`"
+unbind "`"
+bind "`" send-prefix
+
 # Reload conf
 bind r source ~/.tmux.conf\; display "~/.tmux.conf sourced!"
 
-# Vi copypaste mode
-set-window-option -g mode-keys vi
-bind-key -t vi-copy 'v' begin-selection
-bind-key -t vi-copy 'y' copy-selection
+# Vi mode
+set -g status-keys vi
+setw -g mode-keys vi
+
+# Don't rename windows
+set-window-option -g automatic-rename off
+set-window-option -g allow-rename off
+bind-key -T vi-copy 'v' send-keys begin-selection
+bind-key -T vi-copy 'y' send-keys copy-selection
+
+set -g default-terminal "screen-256color"
+set -g status-bg black
+set -g status-fg white
+
+# Start window numbering at 1
+set -g base-index 1
+
+# List of plugins
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'christoomey/vim-tmux-navigator'
+set -g @plugin 'tmux-plugins/tmux-resurrect'
+set -g @plugin 'tmux-plugins/tmux-continuum'
+set -g @plugin 'tmux-plugins/tmux-yank'
+set -g @plugin 'tmux-plugins/tmux-pain-control'
+set -g @plugin 'tmux-plugins/tmux-sensible'
+
+set -g @continuum-boot 'on'
+set -g @continuum-restore 'on'
+set -g @continuum-boot-options 'iterm,fullscreen'
+
+run -b '~/.tmux/plugins/tpm/tpm'

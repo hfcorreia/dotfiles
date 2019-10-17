@@ -156,6 +156,7 @@ Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-fugitive'
+Plug 'shumphrey/fugitive-gitlab.vim'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
@@ -165,6 +166,9 @@ Plug 'sheerun/vim-polyglot'
 Plug 'vim-ruby/vim-ruby'
 Plug 'hashivim/vim-terraform'
 
+" Tmux integration
+Plug 'christoomey/vim-tmux-navigator'
+
 " Linting
 Plug 'w0rp/ale'
 
@@ -172,6 +176,7 @@ Plug 'w0rp/ale'
 Plug '/usr/local/opt/fzf'
 Plug 'junegunn/fzf.vim'
 call plug#end()
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugins Config
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -185,11 +190,13 @@ function! NERDTreeToggleInCurDir()
   endif
 endfunction
 nmap <silent> <leader>, :call NERDTreeToggleInCurDir()<cr>
+nmap <silent> <leader>n :NERDTreeToggle<cr>
 
 " FZF
 let g:fzf_layout = { 'down': '~20%' }
 
 map <c-p> :Files<CR>
+map <c-b> :Buffers<CR>
 nnoremap <c-f> :Ag<Cr>
 imap <c-x><c-k> <plug>(fzf-complete-word)
 imap <c-x><c-f> <plug>(fzf-complete-path)
@@ -198,9 +205,15 @@ imap <c-x><c-l> <plug>(fzf-complete-line)
 
 " Linter
 let g:ale_set_highlights = 0
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_lint_on_insert_leave = 0
+let g:ale_lint_on_enter = 0
 let g:ale_linters = {
 \  'ruby': ['rubocop', 'solargraph'],
 \ }
 
 " Terraform Configs
 let g:terraform_fmt_on_save=1
+
+" Custom Gitlab for fugitive
+let g:fugitive_gitlab_domains = ['https://gitlab.eu-west-1.mgmt.onfido.xyz/']
