@@ -160,6 +160,7 @@ Plug 'shumphrey/fugitive-gitlab.vim'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
+Plug 'tpope/vim-endwise'
 
 " Languages
 Plug 'sheerun/vim-polyglot'
@@ -171,6 +172,9 @@ Plug 'christoomey/vim-tmux-navigator'
 
 " Linting
 Plug 'w0rp/ale'
+
+" COC
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " Search Helpers
 Plug '/usr/local/opt/fzf'
