@@ -176,6 +176,9 @@ Plug 'w0rp/ale'
 " COC
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
+" Markdown
+Plug 'JamshedVesuna/vim-markdown-preview'
+
 " Search Helpers
 Plug '/usr/local/opt/fzf'
 Plug 'junegunn/fzf.vim'
@@ -189,6 +192,8 @@ function! NERDTreeToggleInCurDir()
   " If NERDTree is open in the current buffer
   if (exists("t:NERDTreeBufName") && bufwinnr(t:NERDTreeBufName) != -1)
     exe ":NERDTreeClose"
+  elseif bufname("%") == ""
+    exe ":NERDTree"
   else
     exe ":NERDTreeFind"
   endif
@@ -221,3 +226,37 @@ let g:terraform_fmt_on_save=1
 
 " Custom Gitlab for fugitive
 let g:fugitive_gitlab_domains = ['https://gitlab.eu-west-1.mgmt.onfido.xyz/']
+
+" Preview Markdown
+let vim_markdown_preview_github=1
+let vim_markdown_preview_hotkey='<C-m>'
+
+" Coc
+" Use tab for trigger completion with characters ahead and navigate.
+" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" Remap keys for gotos
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Remap for rename current word
+nmap <leader>rn <Plug>(coc-rename)
+
+" Remap for format selected region
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
+
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
