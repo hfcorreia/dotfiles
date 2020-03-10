@@ -75,7 +75,7 @@ set complete+=kspell
 syntax on
 
 " Set background
-set background=dark
+set background=light
 
 " Set enconding as utf8
 set encoding=utf8
@@ -179,6 +179,9 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 " Markdown
 Plug 'JamshedVesuna/vim-markdown-preview'
 
+" Solarized
+Plug 'altercation/vim-colors-solarized'
+
 " Search Helpers
 Plug '/usr/local/opt/fzf'
 Plug 'junegunn/fzf.vim'
@@ -187,6 +190,9 @@ call plug#end()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugins Config
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Solarized
+colorschem solarized
+
 " NERDTree
 function! NERDTreeToggleInCurDir()
   " If NERDTree is open in the current buffer
