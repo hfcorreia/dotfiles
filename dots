@@ -6,24 +6,30 @@ cd $DOTFILES
 set -e
 
 info () {
-  printf "  [ \033[00;34m..\033[0m ] $1\n"
+  printf "[\033[00;34m..\033[0m] $1\n"
 }
 
 user () {
-  printf "\r  [ \033[0;33m?\033[0m ] $1\n"
+  printf "[\033[0;33m$1\033[0m] $2\n"
 }
 
 success () {
-  printf "\r\033[2K  [ \033[00;32mOK\033[0m ] $1\n"
+  printf "\n\033[2K  [ \033[00;32mOK\033[0m ] $1\n"
 }
 
 fail () {
-  printf "\r\033[2K  [\033[0;31mFAIL\033[0m] $1\n"
-  echo ''
+  printf "\n\033[2K  [\033[0;31mFAIL\033[0m] $1\n"
+}
+
+system_install() {
+  for src in $(find -H "$DOTFILES" -name 'install'); do
+    info "Running install for $src"
+    source $src
+  done
 }
 
 install_dotfiles () {
-  info 'Installing Dotfiles'
+  info 'Symlinking Dotfiles'
   for src in $(find -H "$DOTFILES" -name '*.symlink'); do
     dst="$HOME/.$(basename "${src%.*}")"
 
@@ -59,71 +65,40 @@ update_submodules () {
 }
 
 install() {
+  system_install
   update_submodules
   install_dotfiles
-
-  success 'Plugins installed'
-}
-
-commit () {
-  local message=
-  local yes=
-  info 'Repo changes:'
-  echo "$(git status --porcelain | sed -e 's/\(\n|\r\)/\t\1/g')"
-  user 'Confirm changes? [y/n]'
-  printf "   > "
-  read yes
-  if [[ "$yes" == "y" ]]; then
-    user 'Enter the commit message:'
-    printf "   > "
-    read message
-    $(git add -A)
-    success "\n$(git commit -m "$message")"
-  fi
 }
 
 update () {
   update_submodules
   info 'Updating Dotfiles'
   update_dotfiles
-  success 'Plugins Updated'
+  success 'Dotfiles installed'
 }
 
-push () {
-  info 'Push Changes'
-  $(git push origin master)
-  success 'Plugins Updated'
-}
-
-run_install () {
+run() {
   local action=
 
   while [[ true ]]; do
-    echo ''
-    user "Dotfiles: What do you want to do?\
-      \n\t[i]nstall - clean install (overides existing symlinks)\
-      \n\t[u]pdate  - add missing symlinks, update submodules\
-      \n\t[c]ommit  - commit all changes\
-      \n\t[p]ush    - push all changes\
-      \n\t[e]exit   - exit without doing nothing"
-    printf "   > "
+    user "i" "Install\tClean install (overides existing symlinks)"
+    user "u" "Update\tAdd missing symlinks, update submodules, update applications"
+    user "e" "Exit"
+
+    printf " > "
     read action
 
     if [[ "$action" == "i" ]]; then
       install
     elif [[ "$action" == "u" ]]; then
       update
-    elif [[ "$action" == "c" ]]; then
-      commit
-    elif [[ "$action" == "p" ]]; then
-      push
     elif [[ "$action" == "e" ]]; then
-      echo '  All done!'
-      echo ''
+      echo 'Bye!'
       exit
     else
       fail "Invalid command!"
     fi
+    echo ''
   done
 }
-run_install
+run

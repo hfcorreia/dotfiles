@@ -53,6 +53,9 @@ set laststatus=2
 " Resize
 set textwidth=80
 
+" Show column max
+set colorcolumn=100
+
 " Use the clipboard as default register
 set clipboard+=unnamed
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
