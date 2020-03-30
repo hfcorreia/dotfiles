@@ -1,3 +1,5 @@
+#!/bin/zsh
+
 # Git aliases based on the current branch
 alias gpush='git push origin $(git symbolic-ref --short -q HEAD)'
 alias gpull='git pull origin $(git symbolic-ref --short -q HEAD)'

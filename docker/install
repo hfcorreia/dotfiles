@@ -1,0 +1,7 @@
+#!/bin/zsh
+
+brew tap codekitchen/dinghy
+
+brew_install docker
+brew_install docker-machine
+brew_install dinghy

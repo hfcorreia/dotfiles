@@ -1,0 +1,9 @@
+#!/bin/zsh
+
+brew_install neovim
+
+init_dir="$HOME/.config/nvim"
+if [ ! -d "$init_dir" ]; then
+  mkdir -p $init_dir
+  ln -s "$HOME/.dotfiles/vim/init.vim" "$init_dir/init.vim"
+fi

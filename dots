@@ -5,24 +5,11 @@ cd $DOTFILES
 
 set -e
 
-info () {
-  printf "[\033[00;34m..\033[0m] $1\n"
-}
-
-user () {
-  printf "[\033[0;33m$1\033[0m] $2\n"
-}
-
-success () {
-  printf "\n\033[2K  [ \033[00;32mOK\033[0m ] $1\n"
-}
-
-fail () {
-  printf "\n\033[2K  [\033[0;31mFAIL\033[0m] $1\n"
-}
+source printers
 
 system_install() {
-  for src in $(find -H "$DOTFILES" -name 'install'); do
+  source "$DOTFILES/brew/install"
+  for src in $(find -H "$DOTFILES" -name "install" -not -path "$DOTFILES/brew/install"); do
     info "Running install for $src"
     source $src
   done

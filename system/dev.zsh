@@ -1,3 +1,5 @@
+#!/bin/zsh
+
 compdef _dev dev
 
 autoload function dev() {

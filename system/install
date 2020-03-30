@@ -1,0 +1,8 @@
+#!/bin/zsh
+
+brew_install direnv
+brew_install wget
+brew_install ripgrep
+
+brew_cask_install iterm2
+#brew_cask_install brave-browser
