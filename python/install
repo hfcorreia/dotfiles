@@ -1,0 +1,5 @@
+#!/bin/zsh
+
+brew_install python
+
+pip3 install pynvim

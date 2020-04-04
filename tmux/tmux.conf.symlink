@@ -20,6 +20,10 @@ set-option -g message-style fg=brightred,bg=white #orange and base2
 set-option -g display-panes-active-colour blue #blue
 set-option -g display-panes-colour brightred #orange
 
+# tmux colors
+set -g default-terminal 'screen-256color'
+set-option -sa terminal-overrides ',screen-256color:RGB'
+
 # clock
 set-window-option -g clock-mode-colour green #green
 

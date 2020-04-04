@@ -51,7 +51,7 @@ set tm=500
 set laststatus=2
 
 " Resize
-set textwidth=80
+set textwidth=100
 
 " Show column max
 set colorcolumn=100
@@ -62,14 +62,15 @@ set clipboard+=unnamedplus
 " Text files config
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 autocmd BufRead,BufReadPost,FileType *.md set filetype=markdown
-autocmd BufRead,FileType gitcommit,*.md,*.txt,*.tex set wrap
+autocmd BufRead,FileType gitcommit set tw=80
+autocmd BufRead,FileType *.md,*.txt,*.tex set wrap linebreak nolist tw=100 colorcolumn=0
 autocmd BufRead,FileType gitcommit,*.md,*.txt,*.tex set nonumber
-autocmd BufRead,FileType gitcommit,*.md,*.txt,*.tex set textwidth=0
+autocmd BufRead,FileType gitcommit,*.md,*.txt,*.tex set formatoptions=1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Spell Checks
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Automatic spellchek
-autocmd BufRead,BufNewFile,FileType gitcommit,*.md,*.txt,*.tex  setlocal spell
+autocmd BufRead,BufNewFile,FileType gitcommit,*.md,*.txt,*.tex setlocal spell
 set complete+=kspell
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Colors and Fonts
@@ -173,11 +174,12 @@ Plug 'tmux-plugins/vim-tmux'
 " Solarized
 Plug 'altercation/vim-colors-solarized'
 
-" Linting
-Plug 'dense-analysis/ale'
-
 " COC
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+" Markdown
+Plug 'godlygeek/tabular'
+Plug 'plasticboy/vim-markdown'
 
 " Search Helpers
 Plug '/usr/local/opt/fzf'
@@ -214,23 +216,62 @@ imap <c-x><c-f> <plug>(fzf-complete-path)
 imap <c-x><c-j> <plug>(fzf-complete-file-ag)
 imap <c-x><c-l> <plug>(fzf-complete-line)
 
-" ALE
-let g:ale_set_highlights = 0
-let g:ale_lint_on_text_changed = 'never'
-let g:ale_lint_on_insert_leave = 0
-let g:ale_lint_on_enter = 0
-let g:ale_linters = {
-\  'ruby': ['rubocop'],
-\ }
-let g:ale_fix_on_save = 1
-let g:ale_fixers = {
-\ '*': ['remove_trailing_lines', 'trim_whitespace'],
-\ 'javascript': ['eslint'],
-\ 'ruby': ['rubocop']
-\}
-
 " COC
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
+nmap <leader>r <Plug>(coc-rename)
+xmap <leader>f <Plug>(coc-format-selected)
+nmap <leader>f <Plug>(coc-format-selected)
+
+" Markdown
+let g:vim_markdown_folding_disabled = 1
+let g:vim_markdown_no_extensions_in_markdown = 1
+let g:vim_markdown_auto_extension_ext = 'md'
+let g:vim_markdown_edit_url_in = 'vsplit'
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" User defined commands
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+command! EditSnippets CocCommand snippets.editSnippets
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Zettle Configs
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+autocmd BufRead,FileType *.md,*.txt,*.tex nnoremap <c-p> :Rg title<Cr>
+autocmd BufRead,FileType *.md,*.txt,*.tex nnoremap <c-t> :Rg tag<Cr>
+inoremap <expr> <c-l> fzf#vim#complete("rg -I -N -o -w '\\[(\\w\| \|-)+\\]\\(\\d+\\)' " . expand('%:p:h'))
+
+let g:zettle_dir = "~/Documents/Zettle"
+let g:zettel_todo = expand(g:zettle_dir) . "/todo.md"
+
+function ZettleNew(title)
+  let date = strftime("%Y%m%d%H%M")
+  let file = expand(g:zettle_dir) . "/" . date . ".md"
+  if empty(glob(file))
+    let data = ["---", "id: ".date, "title: ".a:title, "tags:", "---", "", "# ".a:title]
+    call writefile(data, file, "a")
+    call writefile(["* [".a:title."](".date.")"], g:zettel_todo, "a")
+  endif
+endfunction
+command! -nargs=1 ZettleNew call ZettleNew(<f-args>)
+
+function ZettleTodoOpen()
+  silent execute 'vs '. g:zettel_todo
+endfunction
+
+function ZettleTodoClose()
+  silent execute 'bd '. g:zettel_todo
+endfunction
+
+function ZettleTodo()
+  let zettel_todo = expand(g:zettle_dir) . "/todo.md"
+  echom "todo"
+  if (bufwinnr(zettel_todo) > 0)
+    call ZettleTodoClose()
+  else
+    call ZettleTodoOpen()
+  endif
+endfunction
+command! -nargs=0 ZettleTodo call ZettleTodo()
+nmap <leader>t :ZettleTodo<cr>

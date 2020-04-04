@@ -1,3 +1,14 @@
 #!/bin/zsh
 
 brew_install rbenv
+
+ruby_version=2.7.0
+if [[ ! $(rbenv versions | grep "$ruby_version") ]]; then
+  rbenv install $ruby_version
+  rbenv global $ruby_version
+fi
+
+# needed for neovim
+if [[ ! $(gem list neovim | grep "neovim") ]]; then
+  gem install neovim
+fi

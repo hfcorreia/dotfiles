@@ -1,0 +1,9 @@
+{
+  "snippets.userSnippetsDirectory": "~/.dotfiles/vim/snippets/",
+  "snippets.ultisnips.directories": [
+    "~/.dotfiles/vim/snippets/"
+  ],
+  "suggest.noselect": false,
+  "suggest.minTriggerInputLength": 3,
+  "suggest.triggerAfterInsertEnter": true,
+}
