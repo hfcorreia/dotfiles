@@ -1,14 +1,14 @@
 #!/bin/zsh
 
-brew_install rbenv
+function install_gem() {
+  [[ ! $(gem list $1 | grep $1) ]] \
+    && gem install $1 \
+    || info "$1 gem already installed"
+}
 
-ruby_version=2.7.0
-if [[ ! $(rbenv versions | grep "$ruby_version") ]]; then
-  rbenv install $ruby_version
-  rbenv global $ruby_version
-fi
+asdf plugin add ruby &> /dev/null || info "ruby plugin already added"
+asdf install ruby &> /dev/null || info "ruby already installed"
 
-# needed for neovim
-if [[ ! $(gem list neovim | grep "neovim") ]]; then
-  gem install neovim
-fi
+install_gem neovim
+install_gem pry
+install_gem awesome_print

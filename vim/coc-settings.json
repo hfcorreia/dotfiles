@@ -6,4 +6,9 @@
   "suggest.noselect": false,
   "suggest.minTriggerInputLength": 3,
   "suggest.triggerAfterInsertEnter": true,
+  "markdownlint.onOpen": false,
+  "markdownlint.onSave": true,
+  "markdownlint.onChange": false,
+  "markdownlint.config": { "line-length": false },
+  "coc.source.dictionary.enable": true,
 }

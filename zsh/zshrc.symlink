@@ -7,7 +7,7 @@ export DOTFILES=$HOME/.dotfiles
 export ZSH=$DOTFILES/zsh/.oh-my-zsh
 
 # Set name of the theme to load.
-ZSH_THEME="avit"
+ZSH_THEME="wedisagree"
 CASE_SENSITIVE="false"
 export UPDATE_ZSH_DAYS=10
 
@@ -15,7 +15,7 @@ export UPDATE_ZSH_DAYS=10
 unsetopt correct_all
 
 # Oh-my-zsh plugins to load
-plugins=(git vi-mode last-working-dir)
+plugins=(git vi-mode last-working-dir asdf)
 
 # Load all of the zsh relevant files
 source $ZSH/oh-my-zsh.sh

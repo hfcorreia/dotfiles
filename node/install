@@ -1,13 +1,10 @@
 #!/bin/zsh
 
-brew_install nvm
+asdf plugin add nodejs &> /dev/null || info "nodejs plugin already added"
+bash ~/.asdf/plugins/nodejs/bin/import-release-team-keyring
+asdf install nodejs &> /dev/null || info "yarn already installed"
 
-node_version="v13.12.0"
+asdf plugin add yarn  &> /dev/null || info "yarn plugin already added"
+asdf install yarn &> /dev/null || info "yarn already installed"
 
-[ -s "/usr/local/opt/nvm/nvm.sh" ] && source "/usr/local/opt/nvm/nvm.sh"
-
-if [[ ! $(nvm list | grep "$node_version") ]]; then
-  nvm install $node_version
-  npm install -g yarn
-  yarn global add neovim
-fi
+yarn global add neovim

@@ -191,6 +191,9 @@ call plug#end()
 " Solarized
 colorschem solarized
 
+" Snippets Alias
+" cnoreabbrev EditSnippets
+
 " NERDTree
 function! NERDTreeToggleInCurDir()
   " If NERDTree is open in the current buffer
@@ -217,6 +220,20 @@ imap <c-x><c-j> <plug>(fzf-complete-file-ag)
 imap <c-x><c-l> <plug>(fzf-complete-line)
 
 " COC
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
+" use <tab> for trigger completion and navigate to the next complete item
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
+
+inoremap <silent><expr> <Tab>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<Tab>" :
+      \ coc#refresh()
+
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
@@ -240,7 +257,7 @@ command! EditSnippets CocCommand snippets.editSnippets
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 autocmd BufRead,FileType *.md,*.txt,*.tex nnoremap <c-p> :Rg title<Cr>
 autocmd BufRead,FileType *.md,*.txt,*.tex nnoremap <c-t> :Rg tag<Cr>
-inoremap <expr> <c-l> fzf#vim#complete("rg -I -N -o -w '\\[(\\w\| \|-)+\\]\\(\\d+\\)' " . expand('%:p:h'))
+inoremap <expr> <c-l> fzf#vim#complete("rg -I -N -o -w -U 'id: (\\d+)\\n.*title: (.*)\n' -r '[$2]($1)' " . expand('%:p:h'))
 
 let g:zettle_dir = "~/Documents/Zettle"
 let g:zettel_todo = expand(g:zettle_dir) . "/todo.md"
@@ -249,7 +266,7 @@ function ZettleNew(title)
   let date = strftime("%Y%m%d%H%M")
   let file = expand(g:zettle_dir) . "/" . date . ".md"
   if empty(glob(file))
-    let data = ["---", "id: ".date, "title: ".a:title, "tags:", "---", "", "# ".a:title]
+    let data = ["---", "- id: ".date, "- title: ".a:title, "- tags:", "---", "", "# ".a:title]
     call writefile(data, file, "a")
     call writefile(["* [".a:title."](".date.")"], g:zettel_todo, "a")
   endif
