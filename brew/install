@@ -18,6 +18,10 @@ brew_cask_install() {
   fi
 }
 
+plugin_version() {
+  grep -Eo "$1 ([0-9]|\.)*" $DOTFILES/asdf/tool-versions.symlink | cut -d' ' -f2
+}
+
 if [ ! -f "`which brew`" ]; then
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)" \
     && success "Installed brew" || fail "Error installing brew"

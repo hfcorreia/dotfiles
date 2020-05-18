@@ -1,10 +1,12 @@
 #!/bin/zsh
 
+node_version="$(plugin_version nodejs)"
 asdf plugin add nodejs &> /dev/null || info "nodejs plugin already added"
 bash ~/.asdf/plugins/nodejs/bin/import-release-team-keyring
-asdf install nodejs &> /dev/null || info "yarn already installed"
+asdf install nodejs $node_version &> /dev/null || info "nodejs already installed"
 
-asdf plugin add yarn  &> /dev/null || info "yarn plugin already added"
-asdf install yarn &> /dev/null || info "yarn already installed"
+yarn_version="$(plugin_version yarn)"
+asdf plugin add yarn  &> /dev/null || info "yarn plugin already added" asdf install yarn
+asdf install yarn $yarn_version &> /dev/null || info "yarn already installed"
 
 yarn global add neovim

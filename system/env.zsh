@@ -9,6 +9,3 @@ export EDITOR="nvim"
 
 # Hookup direnv
 eval "$(direnv hook zsh)"
-
-# Startup dinghy
-eval "$(dinghy env)"
