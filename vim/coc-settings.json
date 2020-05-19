@@ -11,4 +11,7 @@
   "markdownlint.onChange": false,
   "markdownlint.config": { "line-length": false },
   "coc.source.dictionary.enable": true,
+  "solargraph.formatting": true,
+  "solargraph.diagnostics": true,
+  "solargraph.definitions": true
 }
