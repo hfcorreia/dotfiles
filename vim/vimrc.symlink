@@ -210,8 +210,8 @@ nmap <silent> <leader>n :NERDTreeToggle<cr>
 " FZF
 let g:fzf_layout = { 'down': '~20%' }
 
-map <c-p> :Files<CR>
-map <c-b> :Buffers<CR>
+nnoremap <c-p> :Files<CR>
+nnoremap <c-b> :Buffers<CR>
 nnoremap <c-f> :Rg<Cr>
 imap <c-x><c-k> <plug>(fzf-complete-word)
 imap <c-x><c-f> <plug>(fzf-complete-path)
@@ -254,8 +254,7 @@ command! EditSnippets CocCommand snippets.editSnippets
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Zettle Configs
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-autocmd BufRead,FileType *.md,*.txt,*.tex nnoremap <c-p> :Rg title<Cr>
-autocmd BufRead,FileType *.md,*.txt,*.tex nnoremap <c-t> :Rg tag<Cr>
+autocmd BufRead,FileType *.md,*.txt,*.tex nnoremap <leader>p :Rg title<Cr>
 inoremap <expr> <c-l> fzf#vim#complete("rg -I -N -o -w -U 'id: (\\d+)\\n.*title: (.*)\n' -r '[$2]($1)' " . expand('%:p:h'))
 
 let g:zettle_dir = "~/Documents/Zettle"

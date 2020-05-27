@@ -31,3 +31,7 @@ endsnippet
 snippet suuid "add SecureRandom.uuid" w
 SecureRandom.uuid
 endsnippet
+
+snippet allow_flipper "feature flag allow for specs" b
+allow(Flipper).to receive(:enabled?).with($1).and_return($2)
+endsnippet

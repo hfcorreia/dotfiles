@@ -1,44 +1,25 @@
 #!/bin/zsh
 
-# TODO: needs a revamp
-# autoload function kbash() {
-#   readonly app=${1:?"app name has to be specified"}
-
-#   local container=$(kubectl get pods --namespace=development --selector=app=$app --field-selector=status.phase=Running | sed -n 2p | awk '{print $1}')
-
-#   if [ "$#" -eq 2 ]; then
-#     kubectl --namespace development exec -it $container -c $2 -- bash
-
-#     return 0
-#   fi
-
-#   kubectl --namespace development exec -it $container -- bash
-# }
-
-# autoload function krails() {
-#   readonly app=${1:?"app name has to be specified"}
-
-#   local container=$(kubectl get pods --namespace=development --selector=app=$app --field-selector=status.phase=Running | sed -n 2p | awk '{print $1}')
-
-#   if [ "$#" -eq 2 ]; then
-#     kubectl --namespace development exec -it $container -c $2 -- bundle exec rails c
-
-#     return 0
-#   fi
-
-#   kubectl --namespace development exec -it $container -- bundle exec rails c
-# }
-
-# autoload function krunner() {
-#   readonly app=${1:?"app name has to be specified"}
-
-#   local container=$(kubectl get pods --namespace=development --selector=app=$app --field-selector=status.phase=Running | sed -n 2p | awk '{print $1}')
-
-#   if [ "$#" -eq 3 ]; then
-#     kubectl --namespace development exec -it $container -c $2 -- bundle exec rails runner "$3"
-
-#     return 0
-#   fi
-
-#   kubectl --namespace development exec -it $container -- bundle exec rails runner "$3"
-# }
+autolaod function kex() {
+  NAMESPACE="development"
+  vared -p $'  \033[1mNamespace:\033[0m ' NAMESPACE
+  local POD=$(kubectl get pods -n $NAMESPACE --no-headers | fzf-tmux --reverse --multi | awk -F'[ ]' '{print $1}')
+  local CONTEXT=$(kubectl config current-context | tr -d '\n')
+  if [[ $POD != '' ]]; then
+    echo  "\n  \033[1mContext:\033[0m" $CONTEXT
+    echo  "  \033[1mNamespace:\033[0m" $NAMESPACE
+    echo  "  \033[1mPod:\033[0m" $POD
+    OPTIONS="-it"
+    vared -p $'  \033[1mOptions:\033[0m ' OPTIONS
+    if [[ $@ == '' ]]; then
+                CMD="bash"
+                vared -p $'  \033[1mCommand:\033[0m ' CMD
+    else
+                CMD="$@"
+    fi
+    echo ''
+    print -s kex "$@"
+    print -s kubectl exec $OPTIONS -n $NAMESPACE $POD $CMD
+    zsh -c "kubectl exec $OPTIONS -n $NAMESPACE $POD $CMD"
+  fi
+}
