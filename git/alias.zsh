@@ -14,3 +14,5 @@ alias gmerge='git merge '
 alias g-='git co -'
 
 alias amend!='git commit -a --amend --no-edit && git push --force-with-lease'
+
+alias glog='git --no-pager show -s --format=%B HEAD | pbcopy'
