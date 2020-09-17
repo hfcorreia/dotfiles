@@ -167,10 +167,15 @@ Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-endwise'
 
+Plug 'cakebaker/scss-syntax.vim'
+
 " Tmux integration
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'tmux-plugins/vim-tmux-focus-events'
 Plug 'tmux-plugins/vim-tmux'
+
+" Languages
+Plug 'elixir-editors/vim-elixir'
 
 " Solarized
 Plug 'altercation/vim-colors-solarized'
@@ -259,7 +264,6 @@ let g:vim_markdown_folding_disabled = 1
 let g:vim_markdown_no_extensions_in_markdown = 1
 let g:vim_markdown_auto_extension_ext = 'md'
 let g:vim_markdown_edit_url_in = 'vsplit'
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " User defined commands
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""

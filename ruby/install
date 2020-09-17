@@ -6,10 +6,7 @@ function install_gem() {
     || info "$1 gem already installed"
 }
 
-ruby_version="$(plugin_version ruby)"
-
-asdf plugin add ruby &> /dev/null || info "ruby plugin already added"
-asdf install ruby $ruby_version &> /dev/null || info "ruby already installed"
+asdf_install ruby
 
 install_gem neovim
 install_gem pry

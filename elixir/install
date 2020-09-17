@@ -1,0 +1,4 @@
+#!/bin/zsh
+
+asdf_install erlang
+asdf_install elixir

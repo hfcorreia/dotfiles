@@ -1,7 +1,9 @@
 #!/bin/zsh
 
-function plugin_version() {
-  grep -Eo "$1 ([0-9]|\.)*" $DOTFILES/asdf/tool-versions.symlink | cut -d' ' -f2
+function asdf_install() {
+  local version="$(grep -Eo "$1 ([0-9]|\.)*" $DOTFILES/asdf/tool-versions.symlink | cut -d' ' -f2)"
+  asdf plugin add $1 &> /dev/null || info "$1 plugin already added"
+  asdf install $1 $version &> /dev/null || info "$1 already installed"
 }
 
 brew_install asdf

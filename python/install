@@ -1,6 +1,4 @@
 #!/bin/zsh
 
-python_version="$(plugin_version python)"
-asdf plugin add python &> /dev/null || info "python plugin already added"
-asdf install python &> /dev/null || info "python already installed"
+asdf_install python
 pip3 install pynvim --user
