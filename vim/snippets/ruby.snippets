@@ -28,10 +28,34 @@ snippet debug "add pry debug" w
 binding.pry
 endsnippet
 
-snippet suuid "add SecureRandom.uuid" w
+snippet secure_random "add SecureRandom.uuid" w
 SecureRandom.uuid
 endsnippet
 
 snippet allow_flipper "feature flag allow for specs" b
 allow(Flipper).to receive(:enabled?).with($1).and_return($2)
+endsnippet
+
+snippet module "create a new module" b
+module $1
+	$2
+end
+endsnippet
+
+snippet class "create a class" b
+class $1
+	$2
+end
+endsnippet
+
+snippet open_class "class <<" b
+class << self
+	$1
+end
+endsnippet
+
+snippet def "new method def" b
+def ${1:name}($2)
+	$3
+end
 endsnippet
