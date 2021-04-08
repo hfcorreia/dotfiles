@@ -167,7 +167,6 @@ Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-endwise'
 
-Plug 'cakebaker/scss-syntax.vim'
 
 " Tmux integration
 Plug 'christoomey/vim-tmux-navigator'
@@ -175,7 +174,11 @@ Plug 'tmux-plugins/vim-tmux-focus-events'
 Plug 'tmux-plugins/vim-tmux'
 
 " Languages
+Plug 'hashivim/vim-terraform'
 Plug 'elixir-editors/vim-elixir'
+Plug 'leafgarland/typescript-vim'
+Plug 'peitalin/vim-jsx-typescript'
+Plug 'cakebaker/scss-syntax.vim'
 
 " Solarized
 Plug 'altercation/vim-colors-solarized'
@@ -194,6 +197,9 @@ call plug#end()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugins Config
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" set filetypes as typescriptreact
+autocmd BufNewFile,BufRead *.tsx,*.jsx set filetype=typescriptreact
+
 " Solarized
 colorschem solarized
 
