@@ -1,0 +1,31 @@
+#!/bin/zsh
+
+brew_install() {
+  local pkg=$1
+  if [ ! $(brew list -1 | grep -E "^${pkg}$") ]; then
+    brew install $pkg && success "Installed $pkg" || fail "Error installing $pkg"
+  else
+    info "Skipping install for $pkg"
+  fi
+}
+
+brew_cask_install() {
+  local pkg=$1
+  if brew cask list -1 | grep -q "^${pkg}$" ; then
+    info "Skipping install for $pkg"
+  else
+    brew cask install $pkg && success "Installed $pkg" || fail "Error installing $pkg"
+  fi
+}
+
+plugin_version() {
+  grep -Eo "$1 ([0-9]|\.)*" $DOTFILES/asdf/tool-versions.symlink | cut -d' ' -f2
+}
+
+if [ ! -f "`which brew`" ]; then
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)" \
+    && success "Installed brew" || fail "Error installing brew"
+else
+  info "Skipping install for brew"
+fi
+

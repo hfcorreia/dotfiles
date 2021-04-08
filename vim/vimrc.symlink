@@ -51,22 +51,26 @@ set tm=500
 set laststatus=2
 
 " Resize
-set textwidth=80
+set textwidth=100
+
+" Show column max
+set colorcolumn=100
 
 " Use the clipboard as default register
-set clipboard+=unnamed
+set clipboard+=unnamedplus
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Text files config
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 autocmd BufRead,BufReadPost,FileType *.md set filetype=markdown
-autocmd BufRead,FileType gitcommit,*.md,*.txt,*.tex set wrap
+autocmd BufRead,FileType gitcommit set tw=80
+autocmd BufRead,FileType *.md,*.txt,*.tex set wrap linebreak nolist tw=100 colorcolumn=0
 autocmd BufRead,FileType gitcommit,*.md,*.txt,*.tex set nonumber
-autocmd BufRead,FileType gitcommit,*.md,*.txt,*.tex set textwidth=0
+autocmd BufRead,FileType gitcommit,*.md,*.txt,*.tex set formatoptions=1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Spell Checks
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Automatic spellchek
-autocmd BufRead,BufNewFile,FileType gitcommit,*.md,*.txt,*.tex  setlocal spell
+autocmd BufRead,BufNewFile,FileType gitcommit,*.md,*.txt,*.tex setlocal spell
 set complete+=kspell
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Colors and Fonts
@@ -101,7 +105,7 @@ set nowb
 set noswapfile
 
 " Look for tags
-:set tags=./tags,./../tags,./*/tags
+set tags=./tags,./../tags,./*/tags
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Tabs and indent
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -135,6 +139,7 @@ map <C-j> <C-W>j
 map <C-k> <C-W>k
 map <C-h> <C-W>h
 map <C-l> <C-W>l
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugins
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -150,48 +155,54 @@ call plug#begin('~/.vim/plugged')
 Plug 'airblade/vim-gitgutter'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'scrooloose/nerdtree'
-Plug 'yggdroot/indentline'
 
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-fugitive'
 Plug 'shumphrey/fugitive-gitlab.vim'
+Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-endwise'
 
-" Languages
-Plug 'sheerun/vim-polyglot'
-Plug 'vim-ruby/vim-ruby'
-Plug 'hashivim/vim-terraform'
 
 " Tmux integration
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'tmux-plugins/vim-tmux-focus-events'
+Plug 'tmux-plugins/vim-tmux'
 
-" Linting
-Plug 'w0rp/ale'
+" Languages
+Plug 'hashivim/vim-terraform'
+Plug 'elixir-editors/vim-elixir'
+Plug 'leafgarland/typescript-vim'
+Plug 'peitalin/vim-jsx-typescript'
+Plug 'cakebaker/scss-syntax.vim'
+
+" Solarized
+Plug 'altercation/vim-colors-solarized'
 
 " COC
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " Markdown
-Plug 'JamshedVesuna/vim-markdown-preview'
-
-" Solarized
-Plug 'altercation/vim-colors-solarized'
+Plug 'godlygeek/tabular'
+Plug 'plasticboy/vim-markdown'
 
 " Search Helpers
 Plug '/usr/local/opt/fzf'
 Plug 'junegunn/fzf.vim'
 call plug#end()
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugins Config
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" set filetypes as typescriptreact
+autocmd BufNewFile,BufRead *.tsx,*.jsx set filetype=typescriptreact
+
 " Solarized
 colorschem solarized
+
 
 " NERDTree
 function! NERDTreeToggleInCurDir()
@@ -210,59 +221,120 @@ nmap <silent> <leader>n :NERDTreeToggle<cr>
 " FZF
 let g:fzf_layout = { 'down': '~20%' }
 
-map <c-p> :Files<CR>
-map <c-b> :Buffers<CR>
-nnoremap <c-f> :Ag<Cr>
+nnoremap <c-p> :Files<CR>
+nnoremap <c-b> :Buffers<CR>
+nnoremap <c-f> :Rg<Cr>
 imap <c-x><c-k> <plug>(fzf-complete-word)
 imap <c-x><c-f> <plug>(fzf-complete-path)
 imap <c-x><c-j> <plug>(fzf-complete-file-ag)
 imap <c-x><c-l> <plug>(fzf-complete-line)
 
-" Linter
-let g:ale_set_highlights = 0
-let g:ale_lint_on_text_changed = 'never'
-let g:ale_lint_on_insert_leave = 0
-let g:ale_lint_on_enter = 0
-let g:ale_linters = {
-\  'ruby': ['rubocop', 'solargraph'],
-\ }
+" COC
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
-" Terraform Configs
-let g:terraform_fmt_on_save=1
+" use <tab> for trigger completion and navigate to the next complete item
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
 
-" Custom Gitlab for fugitive
-let g:fugitive_gitlab_domains = ['https://gitlab.eu-west-1.mgmt.onfido.xyz/']
+" inoremap <silent><expr> <Tab>
+"       \ pumvisible() ? "\<C-n>" :
+"       \ <SID>check_back_space() ? "\<Tab>" :
+"       \ coc#refresh()
 
-" Preview Markdown
-let vim_markdown_preview_github=1
-let vim_markdown_preview_hotkey='<C-m>'
-
-" Coc
-" Use tab for trigger completion with characters ahead and navigate.
-" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
 inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
+      \ pumvisible() ? coc#_select_confirm() :
+      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
       \ <SID>check_back_space() ? "\<TAB>" :
       \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
-" Remap keys for gotos
+let g:coc_snippet_next = '<tab>'
+
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
+nmap <leader>r <Plug>(coc-rename)
+xmap <leader>f <Plug>(coc-format-selected)
+nmap <leader>f <Plug>(coc-format-selected)
 
-" Remap for rename current word
-nmap <leader>rn <Plug>(coc-rename)
+" Markdown
+let g:vim_markdown_folding_disabled = 1
+let g:vim_markdown_no_extensions_in_markdown = 1
+let g:vim_markdown_auto_extension_ext = 'md'
+let g:vim_markdown_edit_url_in = 'vsplit'
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" User defined commands
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+command! EditSnippets CocCommand snippets.editSnippets
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Zettle Configs
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+autocmd BufRead,FileType *.md,*.txt,*.tex nnoremap <leader>p :Rg title<Cr>
+inoremap <expr> <c-l> fzf#vim#complete("rg -I -N -o -w -U 'id: (\\d+)\\n.*title: (.*)\n' -r '[$2]($1)' " . expand('%:p:h'))
 
-" Remap for format selected region
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
+let g:zettle_dir = "~/Documents/Zettle"
+let g:zettle_index = expand(g:zettle_dir) . "/index.md"
 
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+function ZettleNew(title)
+  let date = strftime("%Y%m%d%H%M")
+  let file = expand(g:zettle_dir) . "/" . date . ".md"
+  if empty(glob(file))
+    let data = ["---", "- id: ".date, "- title: ".a:title, "- tags:", "---", "", "# ".a:title]
+    call writefile(data, file, "a")
+    call writefile(["* [".a:title."](".date.")"], g:zettle_index, "a")
+  endif
+endfunction
+command! -nargs=1 ZettleNew call ZettleNew(<f-args>)
+
+function ZettleIndexOpen()
+  silent execute 'vs '. g:zettle_index
+endfunction
+
+function ZettleIndexClose()
+  silent execute 'bd '. g:zettle_index
+endfunction
+
+function ZettleIndex()
+  echom "ZettleIndex"
+  if (bufwinnr(g:zettle_index) > 0)
+    call ZettleIndexClose()
+  else
+    call ZettleIndexOpen()
+  endif
+endfunction
+command! -nargs=0 ZettleIndex call ZettleIndex()
+nmap <leader>t :ZettleIndex<cr>
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Language Configs
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Set default language
+set spelllang=en_gb
+set spellfile=$HOME/.vim/spell/en.utf-8.add,$HOME/.vim/spell/pt.utf-8.add
+
+function! LanguageToggle() abort
+  if &l:spelllang == "en_gb"
+    " Switch to Italian
+    setlocal spelllang=pt
+    setlocal spellfile=$HOME/.vim/spell/pt.utf-8.add,$HOME/.vim/spell/en.utf-8.add
+    echom "Switching to Portgues"
+  else
+    " Switch to English
+    setlocal spelllang=en_gb
+    setlocal spellfile=$HOME/.vim/spell/en.utf-8.add,$HOME/.vim/spell/pt.utf-8.add
+    echom "Switching to English"
+  endif
+endfunction
+
+" Switch Languages
+command! LanguageToggle call LanguageToggle()
+
+" Add word to both spellfiles
+nnoremap <leader>zg zg2zg

@@ -1,0 +1,16 @@
+#!/bin/zsh
+
+function install_gem() {
+  [[ ! $(gem list $1 | grep $1) ]] \
+    && gem install $1 \
+    || info "$1 gem already installed"
+}
+
+asdf_install ruby
+
+install_gem neovim
+install_gem pry
+install_gem pry-rails
+install_gem pry-byebug
+install_gem pry-rescue
+install_gem awesome_print

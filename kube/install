@@ -1,0 +1,5 @@
+#!/bin/zsh
+
+brew_install kubernetes-cli
+brew_install kubectx
+brew_install k9s

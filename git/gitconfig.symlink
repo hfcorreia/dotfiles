@@ -1,32 +1,20 @@
 [alias]
   a  = add
   aa = add --all
-  ai = add -i
   #########
-  b = branch -v
-  ba = branch -va
-  bd = branch -d
+  br = branch
+  bv = branch -v
   #########
   c = commit
   ca = commit -a
-  cam = commit --am
   cd = commit --amend
   cad = commit -a --amend
   #########
   co = checkout
-  cob = checkout -b
-  #########
-  d = diff
-  dl = difftool
-  #########
-  m = merge
-  ma = merge --abort
-  mc = merge --continue
-  ms = merge --skip
-  #########
   st = status -s -b
   #########
   ls = log --pretty=oneline
+  new = checkout -b
 [color]
   ui = true
   diff = auto
@@ -42,14 +30,12 @@
 [mergetool]
   keepBackup = false
 [merge]
-  tool = vscode
+  tool = vimdiff
 [user]
   name = Hugo Correia
-  email = hfcorreia91@gmail.com
+  email = hugo@hfcorreia.com
 [difftool]
-	tool = vscode
+  tool = vimdiff
 	prompt = false
-[difftool "vscode"]
-  cmd = code --wait --diff $LOCAL $REMOTE
 [push]
 	default = simple

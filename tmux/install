@@ -1,0 +1,12 @@
+#!/bin/zsh
+
+brew_install tmux
+brew_install reattach-to-user-namespace
+
+tpm_dir="$HOME/.tmux/plugins/tpm"
+if [ ! -d "$tpm_dir" ]; then
+  info "Installing tmux plugin manager at $tpm_dir"
+  git clone https://github.com/tmux-plugins/tpm $tpm_dir \
+    && success "Installed TPM at $tpm_dir" \
+    || fail "Error installing TPM at $tmp_dir"
+fi

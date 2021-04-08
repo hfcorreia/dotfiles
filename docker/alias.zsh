@@ -1,8 +1,4 @@
-function dsh() {
-  docker exec -it $1 bash
-}
-
-autoload dsh
+#!/bin/zsh
 
 alias dps='docker ps'
 alias dnets='docker network ls'

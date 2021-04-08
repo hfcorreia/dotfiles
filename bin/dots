@@ -1,7 +1,0 @@
-#!/bin/zsh
-#
-# dots
-#
-# run the $DOTFILES/install script
-
-$DOTFILES/install

@@ -1,0 +1,4 @@
+#!/bin/zsh
+
+asdf_install python
+pip3 install pynvim --user

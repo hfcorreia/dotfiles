@@ -1,9 +1,13 @@
+#!/bin/zsh
+
+export ZSH_DISABLE_COMPFIX=true
+
 # Path to your oh-my-zsh installation.
 export DOTFILES=$HOME/.dotfiles
 export ZSH=$DOTFILES/zsh/.oh-my-zsh
 
 # Set name of the theme to load.
-ZSH_THEME="avit"
+ZSH_THEME="wedisagree"
 CASE_SENSITIVE="false"
 export UPDATE_ZSH_DAYS=10
 
@@ -11,19 +15,19 @@ export UPDATE_ZSH_DAYS=10
 unsetopt correct_all
 
 # Oh-my-zsh plugins to load
-plugins=(
-  git vi-mode last-working-dir
-  docker kubectl docker-compose
-  node npm
-)
+plugins=(git vi-mode last-working-dir asdf)
 
 # Load all of the zsh relevant files
 source $ZSH/oh-my-zsh.sh
 
+# don't throw errors when file globs don't match anything
+setopt NULL_GLOB
 # Check for local definitions
-for file in $(find $HOME/.local -type f); do
+local_config_files=($HOME/.local/**/*.zsh)
+for file in ${(M)local_config_files:#*/*.zsh}; do
   source $file
 done
+unsetopt NULL_GLOB
 
 typeset -U config_files
 config_files=($DOTFILES/**/*.zsh)

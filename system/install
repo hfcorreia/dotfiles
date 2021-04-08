@@ -1,0 +1,12 @@
+#!/bin/zsh
+
+brew_install direnv
+brew_install wget
+brew_install ripgrep
+brew_install git-open
+brew_install coreutils
+brew_install curl
+brew_install gpg
+brew_install tldr
+
+brew_cask_install iterm2

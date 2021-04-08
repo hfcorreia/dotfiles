@@ -1,0 +1,5 @@
+# TODO: disabled due to issue in ruby 2.7
+# require "awesome_print"
+# AwesomePrint.pry!
+
+Pry.config.color = true

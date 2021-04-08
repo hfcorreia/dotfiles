@@ -1,6 +1,7 @@
+#!/bin/zsh
+
 # Quick commands
 alias c="clear"
 alias e="exit"
-alias dotfiles='cd $HOME/.dotfiles'
-alias timestamp='date +%s'
-alias code='code -n'
+alias dots="$HOME/.dotfiles/dots"
+alias timestamp="date +%s"

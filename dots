@@ -1,0 +1,91 @@
+#!/bin/zsh
+
+DOTFILES=$HOME/.dotfiles
+cd $DOTFILES
+
+set -e
+
+source printers
+
+system_install() {
+  source "$DOTFILES/brew/install"
+  for src in $(find -H "$DOTFILES" -name "install" -not -path "$DOTFILES/brew/install"); do
+    info "Running install for $src"
+    source $src
+  done
+}
+
+install_dotfiles () {
+  info 'Symlinking Dotfiles'
+  for src in $(find -H "$DOTFILES" -name '*.symlink'); do
+    dst="$HOME/.$(basename "${src%.*}")"
+
+    if [ -f "$dst" -o -d "$dst" -o -L "$dst" ]; then
+      if [ "$(readlink $dst)" -ef "$src" ]; then
+        rm -rf "$dst"
+      fi
+    fi
+
+    ln -s "$src" "$dst"
+    success "linked $src to $dst"
+  done
+}
+
+update_dotfiles () {
+  for src in $(find -H "$DOTFILES" -name '*.symlink'); do
+    dst="$HOME/.$(basename "${src%.*}")"
+
+    if [ -f "$dst" -o -d "$dst" -o -L "$dst" ]; then
+      if [ "$(readlink $dst)" -ef "$src" ]; then
+        continue
+      fi
+    fi
+
+    ln -s "$src" "$dst"
+    success "linked $src to $dst"
+  done
+}
+
+update_submodules () {
+  info 'Updating git submodules'
+  $(git submodule update --remote &> /dev/null)
+}
+
+install() {
+  system_install
+  update_submodules
+  install_dotfiles
+}
+
+update () {
+  update_submodules
+  info 'Updating Dotfiles'
+  update_dotfiles
+  success 'Dotfiles installed'
+}
+
+run() {
+  local action=
+
+  while [[ true ]]; do
+    user "i" "Install\tClean install (overides existing symlinks)"
+    user "u" "Update\tAdd missing symlinks, update submodules, update applications"
+    user "e" "Exit"
+
+    printf " > "
+    read action
+
+    if [[ "$action" == "i" ]]; then
+      install
+    elif [[ "$action" == "u" ]]; then
+      update
+    elif [[ "$action" == "e" ]]; then
+      echo 'Bye!'
+      exit
+    else
+      fail "Invalid command!"
+    fi
+    echo ''
+  done
+}
+run
