@@ -174,11 +174,13 @@ Plug 'tmux-plugins/vim-tmux-focus-events'
 Plug 'tmux-plugins/vim-tmux'
 
 " Languages
-Plug 'hashivim/vim-terraform'
-Plug 'elixir-editors/vim-elixir'
-Plug 'leafgarland/typescript-vim'
-Plug 'peitalin/vim-jsx-typescript'
 Plug 'cakebaker/scss-syntax.vim'
+Plug 'elixir-editors/vim-elixir'
+Plug 'hashivim/vim-terraform'
+Plug 'jparise/vim-graphql'
+Plug 'leafgarland/typescript-vim'
+Plug 'pangloss/vim-javascript'
+Plug 'peitalin/vim-jsx-typescript'
 
 " Solarized
 Plug 'altercation/vim-colors-solarized'
@@ -264,6 +266,10 @@ nmap <silent> gr <Plug>(coc-references)
 nmap <leader>r <Plug>(coc-rename)
 xmap <leader>f <Plug>(coc-format-selected)
 nmap <leader>f <Plug>(coc-format-selected)
+xmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>ac  <Plug>(coc-codeaction)
+nmap <leader>qf  <Plug>(coc-fix-current)
 
 " Markdown
 let g:vim_markdown_folding_disabled = 1
