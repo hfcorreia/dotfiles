@@ -15,5 +15,6 @@
   "solargraph.diagnostics": true,
   "solargraph.definitions": true,
   "coc.preferences.jumpCommand": "vsplit",
+  "coc.preferences.jumpCommand": "split",
   "eslint.packageManager": "yarn"
 }
