@@ -128,7 +128,7 @@ set softtabstop=2
 " Mappings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Define the map leader
-let mapleader = "\<Space>"
+let mapleader = ","
 
 " Stop using <esc>
 inoremap jk <esc>
@@ -139,7 +139,6 @@ map <C-j> <C-W>j
 map <C-k> <C-W>k
 map <C-h> <C-W>h
 map <C-l> <C-W>l
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugins
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -192,6 +191,9 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'godlygeek/tabular'
 Plug 'plasticboy/vim-markdown'
 
+" NNN
+Plug 'mcchrish/nnn.vim'
+
 " Search Helpers
 Plug '/usr/local/opt/fzf'
 Plug 'junegunn/fzf.vim'
@@ -205,27 +207,20 @@ autocmd BufNewFile,BufRead *.tsx,*.jsx set filetype=typescriptreact
 " Solarized
 colorschem solarized
 
-
-" NERDTree
-function! NERDTreeToggleInCurDir()
-  " If NERDTree is open in the current buffer
-  if (exists("t:NERDTreeBufName") && bufwinnr(t:NERDTreeBufName) != -1)
-    exe ":NERDTreeClose"
-  elseif bufname("%") == ""
-    exe ":NERDTree"
-  else
-    exe ":NERDTreeFind"
-  endif
-endfunction
-nmap <silent> <leader>, :call NERDTreeToggleInCurDir()<cr>
-nmap <silent> <leader>n :NERDTreeToggle<cr>
-
 " FZF
 let g:fzf_layout = { 'down': '~20%' }
 
+command! -bang -nargs=* Rg
+  \ call fzf#vim#grep(
+  \   "rg --column --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>),
+  \   1,
+  \   {'options': '--delimiter : --nth 4..'},
+  \   <bang>0)
+
 nnoremap <c-p> :Files<CR>
 nnoremap <c-b> :Buffers<CR>
-nnoremap <c-f> :Rg<Cr>
+nnoremap <c-f> :Rg<CR>
+nnoremap <leader>c :Commits<CR>
 imap <c-x><c-k> <plug>(fzf-complete-word)
 imap <c-x><c-f> <plug>(fzf-complete-path)
 imap <c-x><c-j> <plug>(fzf-complete-file-ag)
@@ -240,11 +235,6 @@ function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~ '\s'
 endfunction
-
-" inoremap <silent><expr> <Tab>
-"       \ pumvisible() ? "\<C-n>" :
-"       \ <SID>check_back_space() ? "\<Tab>" :
-"       \ coc#refresh()
 
 inoremap <silent><expr> <TAB>
       \ pumvisible() ? coc#_select_confirm() :
@@ -273,9 +263,18 @@ nmap <leader>qf  <Plug>(coc-fix-current)
 
 " Markdown
 let g:vim_markdown_folding_disabled = 1
-let g:vim_markdown_no_extensions_in_markdown = 1
+let g:vim_markdown_no_extensions_in_markdown = 0
 let g:vim_markdown_auto_extension_ext = 'md'
 let g:vim_markdown_edit_url_in = 'vsplit'
+
+" NNN
+let g:nnn#layout = { 'window': { 'width': 0.9, 'height': 0.6, 'highlight': 'Debug' } }
+let g:nnn#command = 'nnn -e -a -P preview-tui'
+let g:nnn#action = {
+      \ '<c-t>': 'tab split',
+      \ '<c-x>': 'split',
+      \ '<c-v>': 'vsplit' }
+nnoremap <leader>n :NnnPicker %:p:h<CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " User defined commands
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -293,7 +292,7 @@ function ZettleNew(title)
   let date = strftime("%Y%m%d%H%M")
   let file = expand(g:zettle_dir) . "/" . date . ".md"
   if empty(glob(file))
-    let data = ["---", "- id: ".date, "- title: ".a:title, "- tags:", "---", "", "# ".a:title]
+    let data = ["---", "- id: ".date, "- title: ".a:title, "- tags: #todo", "---", "", "# ".a:title]
     call writefile(data, file, "a")
     call writefile(["* [".a:title."](".date.")"], g:zettle_index, "a")
   endif

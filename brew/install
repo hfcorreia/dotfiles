@@ -11,10 +11,10 @@ brew_install() {
 
 brew_cask_install() {
   local pkg=$1
-  if brew cask list -1 | grep -q "^${pkg}$" ; then
+  if brew list --cask -1 | grep -q "^${pkg}$" ; then
     info "Skipping install for $pkg"
   else
-    brew cask install $pkg && success "Installed $pkg" || fail "Error installing $pkg"
+    brew install --cask $pkg && success "Installed $pkg" || fail "Error installing $pkg"
   fi
 }
 
