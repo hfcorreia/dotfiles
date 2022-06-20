@@ -1,7 +1,5 @@
 #!/bin/zsh
 
-brew_install neovim
-
 init_dir="$HOME/.config/nvim"
 if [ ! -d "$init_dir" ]; then
   mkdir -p $init_dir

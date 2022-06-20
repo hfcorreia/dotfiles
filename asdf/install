@@ -5,5 +5,3 @@ function asdf_install() {
   asdf plugin add $1 &> /dev/null || info "$1 plugin already added"
   asdf install $1 $version &> /dev/null || info "$1 already installed"
 }
-
-brew_install asdf

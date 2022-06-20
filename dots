@@ -9,6 +9,9 @@ source printers
 
 system_install() {
   source "$DOTFILES/brew/install"
+  info "Running brew bundle install"
+  $(brew bundle &> /dev/null)
+  info "Running install"
   for src in $(find -H "$DOTFILES" -name "install" -not -path "$DOTFILES/brew/install"); do
     info "Running install for $src"
     source $src

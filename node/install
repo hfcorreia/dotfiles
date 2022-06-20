@@ -1,6 +1,3 @@
 #!/bin/zsh
 
 asdf_install nodejs
-asdf_install yarn
-
-yarn global add neovim
