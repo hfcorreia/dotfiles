@@ -1,0 +1,19 @@
+# Source Prezto.
+if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
+  source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
+fi
+
+################################################################################
+# Aliases
+################################################################################
+
+## GIT
+alias glog='git --no-pager show -s --format=%B HEAD | pbcopy'
+alias gpull='git pull origin $(git symbolic-ref --short -q HEAD)'
+alias gpush='git push origin $(git symbolic-ref --short -q HEAD)'
+alias grebase!='git co master && git pull origin master && git co - && git rebase -'
+
+## VIM
+alias vi='nvim'
+alias vim='nvim'
+################################################################################
