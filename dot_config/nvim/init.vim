@@ -80,6 +80,9 @@ Plug 'mhinz/vim-signify'
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
+" Colorscheme
+Plug 'morhetz/gruvbox'
+
 call plug#end()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
