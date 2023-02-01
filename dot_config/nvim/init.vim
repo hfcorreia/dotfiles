@@ -75,6 +75,14 @@ call plug#begin()
 
 " General Plugins
 Plug 'mhinz/vim-signify'
+Plug 'bronson/vim-trailing-whitespace'
+Plug 'tpope/vim-abolish'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-rhubarb'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-sensible'
+Plug 'tpope/vim-surround'
 
 " Languages
 Plug 'neovim/nvim-lspconfig'
