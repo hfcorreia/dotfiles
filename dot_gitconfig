@@ -1,0 +1,43 @@
+[alias]
+  a  = add
+  aa = add --all
+  #########
+  br = branch
+  bv = branch -v
+  #########
+  c = commit
+  ca = commit -a
+  cd = commit --amend
+  cad = commit -a --amend
+  #########
+  co = checkout
+  st = status -s -b
+  #########
+  ls = log --pretty=oneline
+  new = checkout -b
+[color]
+  ui = true
+  diff = auto
+  status = auto
+  branch = auto
+[core]
+  editor = vim
+  excludesfile = ~/.gitignore
+[init]
+  templatedir = ~/.dotfiles/git/templates
+	defaultBranch = main
+[help]
+  autocorrect = 1
+[mergetool]
+  keepBackup = false
+[merge]
+  tool = vimdiff
+[user]
+  name = Hugo Correia
+  email = hugo@hfcorreia.com
+[difftool]
+  tool = vimdiff
+	prompt = false
+[push]
+	default = simple
+
