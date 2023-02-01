@@ -1,5 +1,5 @@
-cask "iterm2"
 cask "firefox"
+cask "alacritty"
 
 brew "chezmoi"
 brew "direnv"

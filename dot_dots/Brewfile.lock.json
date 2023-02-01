@@ -8,9 +8,15 @@
         }
       },
       "firefox": {
-        "version": "109.0",
+        "version": "109.0.1",
         "options": {
           "full_name": "firefox"
+        }
+      },
+      "alacritty": {
+        "version": "0.11.0",
+        "options": {
+          "full_name": "alacritty"
         }
       }
     },
@@ -394,7 +400,7 @@
       "ventura": {
         "HOMEBREW_VERSION": "3.6.20",
         "HOMEBREW_PREFIX": "/usr/local",
-        "Homebrew/homebrew-core": "706bd6e2787e493263eebc031ec76b3f22f5cec4",
+        "Homebrew/homebrew-core": "36dd4042628970e2fe0ef0ecaa3f2e704cf07a9b",
         "CLT": "14.2.0.0.1.1668646533",
         "Xcode": "14.1",
         "macOS": "13.2"
