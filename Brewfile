@@ -1,0 +1,11 @@
+cask "iterm2"
+cask "firefox"
+
+brew "chezmoi"
+brew "direnv"
+brew "neovim"
+brew "ripgrep"
+brew "tldr"
+brew "tmux"
+brew "wget"
+brew "zsh"
