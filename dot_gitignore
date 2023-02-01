@@ -1,0 +1,8 @@
+# Global gitignore!
+.DS\_Store
+*~
+*.swp
+
+.envrc
+.ruby-version
+.tool-versions
