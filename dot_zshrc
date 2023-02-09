@@ -23,5 +23,10 @@ alias grebase!='git co master && git pull origin master && git co - && git rebas
 ## VIM
 alias vi='nvim'
 alias vim='nvim'
-################################################################################
 
+################################################################################
+# FZF config
+################################################################################
+export FZF_DEFAULT_COMMAND="rg --files --hidden -g '!.git'"
+export FZF_TMUX=1
+export FZF_TMUX_HEIGHT=20
