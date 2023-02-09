@@ -3,9 +3,16 @@ if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
 
+# Source FZF
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
 ################################################################################
 # Aliases
 ################################################################################
+
+## System
+alias c="clear"
+alias e="exit"
 
 ## GIT
 alias glog='git --no-pager show -s --format=%B HEAD | pbcopy'
@@ -17,3 +24,4 @@ alias grebase!='git co master && git pull origin master && git co - && git rebas
 alias vi='nvim'
 alias vim='nvim'
 ################################################################################
+
