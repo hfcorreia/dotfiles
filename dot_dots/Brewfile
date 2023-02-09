@@ -6,6 +6,7 @@ cask "alacritty"
 
 brew "chezmoi"
 brew "direnv"
+brew "fzf"
 brew "neovim"
 brew "ripgrep"
 brew "tldr"
