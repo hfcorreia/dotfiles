@@ -54,20 +54,23 @@ set nobackup
 set nowb
 set noswapfile
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Mappings
+" Tabs and indent
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Define the map leader
-let mapleader = ","
+" Expands tab
+set expandtab
 
-" Stop using <esc>
-inoremap jk <esc>
-inoremap <esc> <nop>
+" Auto-indent
+set ai
+set si
+set ci
 
-" Smart way to move btw. windows
-map <C-j> <C-W>j
-map <C-k> <C-W>k
-map <C-h> <C-W>h
-map <C-l> <C-W>l
+" Auto-indent amount
+set shiftwidth=2
+set shiftround
+
+" Tabs
+set tabstop=2
+set softtabstop=2
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugins
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -86,6 +89,7 @@ Plug 'tpope/vim-surround'
 
 " Languages
 Plug 'neovim/nvim-lspconfig'
+Plug 'mfussenegger/nvim-dap'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 " Colorscheme
@@ -95,6 +99,14 @@ Plug 'morhetz/gruvbox'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'tmux-plugins/vim-tmux-focus-events'
 Plug 'tmux-plugins/vim-tmux'
+
+" Nvim Tree
+Plug 'nvim-tree/nvim-tree.lua'
+
+" Needed for other plugins
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.x' }
+Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 
 call plug#end()
 
@@ -108,3 +120,28 @@ autocmd vimenter * ++nested colorscheme gruvbox
 " Load Lua Configs
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 lua require('config')
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Mappings
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Define the map leader
+let mapleader = ","
+
+" Stop using <esc>
+inoremap jk <esc>
+inoremap <esc> <nop>
+
+" Smart way to move btw. windows
+map <C-j> <C-W>j
+map <C-k> <C-W>k
+map <C-h> <C-W>h
+map <C-l> <C-W>l
+
+" Nvim Tree toggle
+nmap <leader>n :NvimTreeFindFileToggle<CR>
+
+" Telescope mappings
+nnoremap <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+nnoremap <leader>fb <cmd>Telescope buffers<cr>
+nnoremap <leader>fh <cmd>Telescope help_tags<cr>
