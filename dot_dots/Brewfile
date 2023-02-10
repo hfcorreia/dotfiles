@@ -3,6 +3,7 @@ tap "homebrew/cask-fonts"
 cask "font-hack-nerd-font"
 cask "firefox"
 cask "alacritty"
+cask "tidal"
 
 brew "chezmoi"
 brew "direnv"

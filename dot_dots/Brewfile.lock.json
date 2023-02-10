@@ -24,6 +24,12 @@
         "options": {
           "full_name": "font-hack-nerd-font"
         }
+      },
+      "tidal": {
+        "version": "2.34.2",
+        "options": {
+          "full_name": "tidal"
+        }
       }
     },
     "brew": {
@@ -455,7 +461,7 @@
       "ventura": {
         "HOMEBREW_VERSION": "3.6.21",
         "HOMEBREW_PREFIX": "/usr/local",
-        "Homebrew/homebrew-core": "9bf84346364ed2cf30b2d19c6049ab943e6f6642",
+        "Homebrew/homebrew-core": "4325cbd31601feccc6485c875fb924ee84668cc5",
         "CLT": "14.2.0.0.1.1668646533",
         "Xcode": "14.1",
         "macOS": "13.2"
