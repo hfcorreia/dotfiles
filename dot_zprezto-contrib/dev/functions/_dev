@@ -1,0 +1,8 @@
+#compdef dev
+#autoload
+
+local dirs=$(find $HOME/Development -mindepth 1  -maxdepth 1 -type d -execdir basename '{}' ';')
+
+_arguments  \
+  "1: :($dirs)" \
+  "*::arg:->args"

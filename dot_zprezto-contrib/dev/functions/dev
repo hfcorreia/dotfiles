@@ -1,0 +1,3 @@
+[ "$#" -eq 0 ] && cd $HOME/Development
+
+cd "$HOME/Development/$1"
