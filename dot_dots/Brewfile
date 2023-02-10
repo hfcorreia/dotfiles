@@ -5,6 +5,7 @@ cask "firefox"
 cask "alacritty"
 cask "tidal"
 
+brew "asdf"
 brew "chezmoi"
 brew "direnv"
 brew "fzf"
