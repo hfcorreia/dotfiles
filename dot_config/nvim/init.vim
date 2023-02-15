@@ -89,8 +89,10 @@ Plug 'tpope/vim-surround'
 
 " Languages
 Plug 'neovim/nvim-lspconfig'
+Plug 'williamboman/mason-lspconfig.nvim'
 Plug 'mfussenegger/nvim-dap'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'williamboman/mason.nvim'
 
 " Colorscheme
 Plug 'morhetz/gruvbox'
