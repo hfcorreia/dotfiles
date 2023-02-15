@@ -24,7 +24,6 @@
   editor = vim
   excludesfile = ~/.gitignore
 [init]
-  templatedir = ~/.dotfiles/git/templates
 	defaultBranch = main
 [help]
   autocorrect = 1
