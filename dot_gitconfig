@@ -30,13 +30,15 @@
 [mergetool]
   keepBackup = false
 [merge]
-  tool = vimdiff
+  tool = nvimdiff
 [user]
   name = Hugo Correia
   email = hugo@hfcorreia.com
 [difftool]
-  tool = vimdiff
+  tool = nvimdiff
 	prompt = false
+[difftool "nvimdiff"]
+  cmd = "nvim -d \"$LOCAL\" \"$REMOTE\""
 [push]
 	default = simple
 
