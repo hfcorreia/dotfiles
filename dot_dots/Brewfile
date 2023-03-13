@@ -1,11 +1,14 @@
 tap "homebrew/cask-fonts"
 
-cask "font-hack-nerd-font"
-cask "firefox"
+cask "1password"
+cask "1password-cli"
 cask "alacritty"
+cask "docker"
+cask "firefox"
+cask "font-hack-nerd-font"
+cask "obsidian"
 cask "tidal"
 cask "todoist"
-cask "obsidian"
 
 brew "asdf"
 brew "chezmoi"
