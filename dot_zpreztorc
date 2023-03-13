@@ -18,7 +18,7 @@ zstyle ':prezto:load' pmodule-dirs $HOME/.zprezto-contrib
 # zstyle ':prezto:load' zmodule 'attr' 'stat'
 
 # Set the Zsh functions to load (man zshcontrib).
-# zstyle ':prezto:load' zfunction 'zargs' 'zmv'
+zstyle ':prezto:load' zfunction 'zargs' 'zmv'
 
 # Set the Prezto modules to load (browse modules).
 # The order matters.
@@ -33,9 +33,7 @@ zstyle ':prezto:load' pmodule \
   'completion' \
   'history-substring-search' \
   'prompt' \
-  'git' \
-  'dev'
-
+  'git'
 #
 # Autosuggestions
 #
