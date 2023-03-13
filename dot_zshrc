@@ -1,13 +1,21 @@
+export HOMEBREW_PREFIX="$(brew --prefix)"
+
 # Source Prezto.
 if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
 
+# asdf
+export FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+
+autoload -Uz compinit
+compinit
 # Source FZF
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # Source asdf
 . $(brew --prefix asdf)/libexec/asdf.sh
+
 ################################################################################
 # Aliases
 ################################################################################
@@ -32,3 +40,8 @@ alias vim='nvim'
 export FZF_DEFAULT_COMMAND="rg --files --hidden -g '!.git'"
 export FZF_TMUX=1
 export FZF_TMUX_HEIGHT=20
+
+################################################################################
+# direnv
+################################################################################
+eval "$(direnv hook zsh)"
