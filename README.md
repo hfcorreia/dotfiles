@@ -14,4 +14,6 @@ Install homebrew:
 
 Then run:
 
-`curl -L https://raw.githubusercontent.com/hfcorreia/dotfiles/main/setup.sh | bash`
+```
+curl -L https://raw.githubusercontent.com/hfcorreia/dotfiles/main/setup.sh | bash
+```
