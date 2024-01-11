@@ -8,6 +8,7 @@ cask "protonmail-bridge"
 cask "raycast"
 cask "tidal"
 cask "todoist"
+cask "telegram"
 
 brew "curl"
 brew "direnv"
