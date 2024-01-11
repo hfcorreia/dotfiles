@@ -4,7 +4,7 @@ echo "Install dev tools on MacOS"
 xcode-select --install
 
 echo "Installing homebrew"
-sudo bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 
 echo "Cloning dotfiles to .dotfiles"
 git clone git@github.com:hfcorreia/dotfiles.git ~/.dotfiles
