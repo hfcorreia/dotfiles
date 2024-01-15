@@ -29,6 +29,8 @@ zplug "modules/terminal", from:prezto
 zplug "modules/tmux", from:prezto
 zplug "modules/utility",  from:prezto
 
+zplug 'wfxr/forgit'
+
 zplug "zsh-users/zsh-completions",              defer:0
 zplug "zsh-users/zsh-autosuggestions",          defer:2, on:"zsh-users/zsh-completions"
 zplug "zsh-users/zsh-syntax-highlighting",      defer:2, on:"zsh-users/zsh-autosuggestions"
@@ -89,6 +91,7 @@ source "/opt/homebrew/opt/fzf/shell/key-bindings.zsh"
 export FZF_DEFAULT_COMMAND="rg --files --hidden -g '!.git'"
 export FZF_TMUX=1
 export FZF_TMUX_HEIGHT=20
+export FZF_DEFAULT_OPTS='--height 20% --layout=reverse'
 
 #################################
 # Setup direnv
@@ -146,3 +149,10 @@ fi
 if [[ -z "$LANG" ]]; then
   export LANG='en_US.UTF-8'
 fi
+
+#################################
+# Git
+#################################
+function fixup! () {
+  git ls -n 20 | fzf | cut -d " " -f 1 | xargs git commit --no-verify --fixup
+}
