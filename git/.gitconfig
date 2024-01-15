@@ -41,3 +41,4 @@
   cmd = "nvim -d \"$LOCAL\" \"$REMOTE\""
 [push]
   default = simple
+	autoSetupRemote = true
