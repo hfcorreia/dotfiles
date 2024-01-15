@@ -1,3 +1,5 @@
+tap "homebrew/cask-fonts"
+
 cask "1password"
 cask "1password-cli"
 cask "alacritty"
@@ -9,6 +11,7 @@ cask "raycast"
 cask "tidal"
 cask "todoist"
 cask "telegram"
+cask "homebrew/cask-fonts/font-hack-nerd-font"
 
 brew "curl"
 brew "direnv"
