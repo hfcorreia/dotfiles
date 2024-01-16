@@ -28,12 +28,12 @@ require("lazy").setup({
   "williamboman/mason-lspconfig.nvim",
   "williamboman/mason.nvim",
   'hrsh7th/cmp-path',
-  {"catppuccin/nvim", name = "catppuccin", priority = 1000 },
-  {"nvim-treesitter/nvim-treesitter", build = ":TSUpdate"},
-  {"numToStr/Comment.nvim", lazy = false},
-  {"windwp/nvim-autopairs", event = "InsertEnter"},
-  {"nvim-telescope/telescope.nvim", tag = "0.1.5", dependencies = { "nvim-lua/plenary.nvim" }},
-  {"nvim-telescope/telescope-fzf-native.nvim", build = "make" }
+  { "catppuccin/nvim",                          name = "catppuccin",  priority = 1000 },
+  { "nvim-treesitter/nvim-treesitter",          build = ":TSUpdate" },
+  { "numToStr/Comment.nvim",                    lazy = false },
+  { "windwp/nvim-autopairs",                    event = "InsertEnter" },
+  { "nvim-telescope/telescope.nvim",            tag = "0.1.5",        dependencies = { "nvim-lua/plenary.nvim" } },
+  { "nvim-telescope/telescope-fzf-native.nvim", build = "make" }
 })
 
 -- Base Vim Configs
@@ -59,7 +59,7 @@ vim.opt.number = true
 -- Treesitter config
 require("nvim-treesitter.configs").setup {
   -- A list of parser names, or "all" (the four listed parsers should always be installed)
-  ensure_installed = { "ruby", "lua", "vim", "json", "yaml", "elixir", "html", "python", "markdown"},
+  ensure_installed = { "ruby", "lua", "vim", "json", "yaml", "elixir", "html", "python", "markdown" },
 
   -- Install parsers synchronously (only applied to `ensure_installed`)
   sync_install = false,
@@ -93,16 +93,17 @@ require("telescope").setup({
         }
       }
     },
-  pickers = {
-    find_files = {
-      theme = "dropdown",
-      find_command = { "rg", "--files", "--hidden", "--glob", "!**/.git/*" }
-    }
-  },fzf = {
-      fuzzy = true,                    -- false will only do exact matching
-      override_generic_sorter = true,  -- override the generic sorter
-      override_file_sorter = true,     -- override the file sorter
-      case_mode = "smart_case",        -- or "ignore_case" or "respect_case"
+    pickers = {
+      find_files = {
+        theme = "dropdown",
+        find_command = { "rg", "--files", "--hidden", "--glob", "!**/.git/*" }
+      }
+    },
+    fzf = {
+      fuzzy = true,                   -- false will only do exact matching
+      override_generic_sorter = true, -- override the generic sorter
+      override_file_sorter = true,    -- override the file sorter
+      case_mode = "smart_case",       -- or "ignore_case" or "respect_case"
       -- the default case_mode is "smart_case"
     }
   }
@@ -169,11 +170,11 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', '<space>wl', function()
       print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
     end, opts)
-    vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, opts)
-    vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, opts)
-    vim.keymap.set({ 'n', 'v' }, '<space>ca', vim.lsp.buf.code_action, opts)
+    vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, opts)
+    vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
+    vim.keymap.set({ 'n', 'v' }, '<leader>ca', vim.lsp.buf.code_action, opts)
     vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
-    vim.keymap.set('n', '<space>f', function()
+    vim.keymap.set('n', '<leader>=', function()
       vim.lsp.buf.format { async = true }
     end, opts)
   end,
@@ -199,24 +200,24 @@ cmp.setup({
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
   }, {
-      { name = 'buffer' },
-    }),
+    { name = 'buffer' },
+  }),
 })
 
 cmp.setup.cmdline('/', {
-	mapping = cmp.mapping.preset.cmdline(),
-	sources = {
-		{ name = 'buffer' }
-	}
+  mapping = cmp.mapping.preset.cmdline(),
+  sources = {
+    { name = 'buffer' }
+  }
 })
 
 cmp.setup.cmdline(':', {
-	mapping = cmp.mapping.preset.cmdline(),
-	sources = cmp.config.sources({
-		{ name = 'path' }
-	}, {
-			{ name = 'cmdline' }
-		})
+  mapping = cmp.mapping.preset.cmdline(),
+  sources = cmp.config.sources({
+    { name = 'path' }
+  }, {
+    { name = 'cmdline' }
+  })
 })
 
 -- Comment config

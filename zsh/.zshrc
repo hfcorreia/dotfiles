@@ -10,6 +10,9 @@ then
   FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
 fi
 
+# Source ASDF
+. $(brew --prefix asdf)/libexec/asdf.sh
+
 # Load zplug
 source $ZPLUG_HOME/init.zsh
 
