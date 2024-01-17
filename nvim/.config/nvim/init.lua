@@ -14,6 +14,7 @@ vim.opt.rtp:prepend(lazypath)
 
 -- lazy.nvim config
 require("lazy").setup({
+  'vim-test/vim-test',
   "L3MON4D3/LuaSnip",
   "hrsh7th/cmp-cmdline",
   "hrsh7th/cmp-buffer",
@@ -41,25 +42,21 @@ vim.cmd.colorscheme "catppuccin-mocha"
 vim.o.termguicolors = true
 vim.o.background = "dark"
 
+-- Netrw conifgs
+vim.g.netrw_keepdir = 0
+vim.g.netrw_winsize = 20
+vim.g.netrw_banner = 0
+vim.g.netrw_liststyle = 3
+
 -- Mappings
 vim.g.mapleader = ","
 
-local builtin = require("telescope.builtin")
-vim.keymap.set("n", "<leader>ff", builtin.find_files, {})
-vim.keymap.set("n", "<leader>fg", builtin.live_grep, {})
-vim.keymap.set("n", "<leader>fb", builtin.buffers, {})
-
-vim.opt.clipboard = "unnamedplus"
-vim.opt.tabstop = 2
-vim.opt.shiftwidth = 2
-vim.opt.softtabstop = 2
-vim.opt.expandtab = true
-vim.opt.number = true
+vim.keymap.set("n", "<leader>fd", "<Cmd>Lexplore<CR>", {})
 
 -- Treesitter config
 require("nvim-treesitter.configs").setup {
   -- A list of parser names, or "all" (the four listed parsers should always be installed)
-  ensure_installed = { "ruby", "lua", "vim", "json", "yaml", "elixir", "html", "python", "markdown" },
+  ensure_installed = { "ruby", "lua", "vim", "json", "yaml", "elixir", "html", "python", "markdown", "heex", "eex" },
 
   -- Install parsers synchronously (only applied to `ensure_installed`)
   sync_install = false,
@@ -228,3 +225,14 @@ require("nvim-autopairs").setup()
 
 -- Gitsigns config
 require("gitsigns").setup()
+
+-- vim-test
+vim.cmd [[
+  let test#strategy = "vimux"
+]]
+
+vim.keymap.set("n", "<leader>tc", ":TestNearest<CR>", {})
+vim.keymap.set("n", "<leader>tf", ":TestFile<CR>", {})
+vim.keymap.set("n", "<leader>ta", ":TestSuite<CR>", {})
+vim.keymap.set("n", "<leader>tv", ":TestVisit<CR>", {})
+vim.keymap.set("n", "<leader>tl", ":TestLast<CR>", {})
