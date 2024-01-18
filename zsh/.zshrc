@@ -32,7 +32,9 @@ zplug "modules/terminal", from:prezto
 zplug "modules/tmux", from:prezto
 zplug "modules/utility",  from:prezto
 
-zplug 'wfxr/forgit'
+zplug "wfxr/forgit"
+
+zplug "~/.local/zsh/plugins", from:local
 
 zplug "zsh-users/zsh-completions",              defer:0
 zplug "zsh-users/zsh-autosuggestions",          defer:2, on:"zsh-users/zsh-completions"
@@ -54,6 +56,12 @@ zstyle ':prezto:module:utility' safe-ops 'yes'
 ## always start the zsh in tmux
 zstyle ':prezto:module:tmux:auto-start' local  'yes'
 zstyle ':prezto:module:tmux:auto-start' remote 'yes'
+
+# Set the key mapping style to 'emacs' or 'vi'.
+zstyle ':prezto:module:editor' key-bindings 'vi'
+
+# Auto convert .... to ../..
+zstyle ':prezto:module:editor' dot-expansion 'yes'
 
 # Install plugins if needed
 if ! zplug check --verbose; then

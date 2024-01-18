@@ -99,20 +99,20 @@ require("nvim-treesitter.configs").setup {
 
 -- Telescope config
 require("telescope").setup({
+  defaults = {
+    mappings = {
+      i = {
+        ["<Esc>"] = require("telescope.actions").close
+      }
+    }
+  },
+  pickers = {
+    find_files = {
+      hidden = true,
+      find_command = { "rg", "--files", "--hidden", "--glob", "!**/.git/*" },
+    }
+  },
   extensions = {
-    defaults = {
-      mappings = {
-        i = {
-          ["<Esc>"] = require("telescope.actions").close
-        }
-      }
-    },
-    pickers = {
-      find_files = {
-        theme = "dropdown",
-        find_command = { "rg", "--files", "--hidden", "--glob", "!**/.git/*" }
-      }
-    },
     fzf = {
       fuzzy = true,                   -- false will only do exact matching
       override_generic_sorter = true, -- override the generic sorter
@@ -122,6 +122,14 @@ require("telescope").setup({
     }
   }
 })
+
+local builtin = require("telescope.builtin")
+local default_opts = { noremap = true }
+vim.keymap.set("n", "<leader>ff", builtin.git_files, default_opts)
+vim.keymap.set("n", "<leader>fa", builtin.find_files, default_opts)
+vim.keymap.set("n", "<leader>fg", builtin.live_grep, default_opts)
+vim.keymap.set("n", "<leader>fb", builtin.buffers, default_opts)
+vim.keymap.set("n", "<leader>fd", builtin.git_status, default_opts)
 
 require('telescope').load_extension('fzf')
 
