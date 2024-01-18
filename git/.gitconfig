@@ -31,6 +31,10 @@
   keepBackup = false
 [merge]
   tool = nvimdiff
+[mergetool]
+    prompt = true
+[mergetool "nvimdiff"]
+    cmd = "nvim -d \"$LOCAL\" \"$REMOTE\" \"$MERGED\" -c 'wincmd w' -c 'wincmd J'"
 [user]
   name = Hugo Correia
   email = hugo@hfcorreia.com
