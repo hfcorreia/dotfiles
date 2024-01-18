@@ -58,9 +58,7 @@ require("lazy").setup({
 })
 
 -- Base Vim Configs
-vim.cmd.colorscheme "catppuccin-mocha"
 vim.o.termguicolors = true
-vim.o.background = "dark"
 vim.opt.clipboard = "unnamedplus"
 vim.opt.mouse = "r"
 vim.opt.tabstop = 2
@@ -271,3 +269,14 @@ require("nvim-tree").setup({
 })
 
 vim.keymap.set('n', '<leader>n', ':NvimTreeFindFileToggle<CR>')
+
+-- catppuccin
+require("catppuccin").setup({
+  integrations = {
+    cmp = true,
+    gitsigns = true,
+    nvimtree = true,
+    treesitter = true,
+  }
+})
+vim.cmd.colorscheme "catppuccin-mocha"
