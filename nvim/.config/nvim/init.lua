@@ -28,7 +28,27 @@ require("lazy").setup({
   "tpope/vim-surround",
   "williamboman/mason-lspconfig.nvim",
   "williamboman/mason.nvim",
-  'hrsh7th/cmp-path',
+  "hrsh7th/cmp-path",
+  "nvim-tree/nvim-tree.lua",
+  "nvim-tree/nvim-web-devicons",
+  "preservim/vimux",
+  {
+    "christoomey/vim-tmux-navigator",
+    cmd = {
+      "TmuxNavigateLeft",
+      "TmuxNavigateDown",
+      "TmuxNavigateUp",
+      "TmuxNavigateRight",
+      "TmuxNavigatePrevious",
+    },
+    keys = {
+      { "<c-h>",  "<cmd><C-U>TmuxNavigateLeft<cr>" },
+      { "<c-j>",  "<cmd><C-U>TmuxNavigateDown<cr>" },
+      { "<c-k>",  "<cmd><C-U>TmuxNavigateUp<cr>" },
+      { "<c-l>",  "<cmd><C-U>TmuxNavigateRight<cr>" },
+      { "<c-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>" },
+    },
+  },
   { "catppuccin/nvim",                          name = "catppuccin",  priority = 1000 },
   { "nvim-treesitter/nvim-treesitter",          build = ":TSUpdate" },
   { "numToStr/Comment.nvim",                    lazy = false },
@@ -41,17 +61,16 @@ require("lazy").setup({
 vim.cmd.colorscheme "catppuccin-mocha"
 vim.o.termguicolors = true
 vim.o.background = "dark"
-
--- Netrw conifgs
-vim.g.netrw_keepdir = 0
-vim.g.netrw_winsize = 20
-vim.g.netrw_banner = 0
-vim.g.netrw_liststyle = 3
+vim.opt.clipboard = "unnamedplus"
+vim.opt.mouse = "r"
+vim.opt.tabstop = 2
+vim.opt.shiftwidth = 2
+vim.opt.softtabstop = 2
+vim.opt.expandtab = true
+vim.opt.number = true
 
 -- Mappings
 vim.g.mapleader = ","
-
-vim.keymap.set("n", "<leader>fd", "<Cmd>Lexplore<CR>", {})
 
 -- Treesitter config
 require("nvim-treesitter.configs").setup {
@@ -236,3 +255,19 @@ vim.keymap.set("n", "<leader>tf", ":TestFile<CR>", {})
 vim.keymap.set("n", "<leader>ta", ":TestSuite<CR>", {})
 vim.keymap.set("n", "<leader>tv", ":TestVisit<CR>", {})
 vim.keymap.set("n", "<leader>tl", ":TestLast<CR>", {})
+
+-- nvim-tree config
+require("nvim-tree").setup({
+  sort_by = "case_sensitive",
+  view = {
+    width = 30,
+  },
+  renderer = {
+    group_empty = true,
+  },
+  filters = {
+    dotfiles = true,
+  },
+})
+
+vim.keymap.set('n', '<leader>n', ':NvimTreeFindFileToggle<CR>')

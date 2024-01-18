@@ -159,3 +159,8 @@ fi
 function fixup! () {
   git ls -n 20 | fzf | cut -d " " -f 1 | xargs git commit --no-verify --fixup
 }
+
+#################################
+# Bat
+#################################
+export BAT_THEME="Catppuccin-mocha"
