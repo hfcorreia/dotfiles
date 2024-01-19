@@ -14,24 +14,25 @@ vim.opt.rtp:prepend(lazypath)
 
 -- lazy.nvim config
 require("lazy").setup({
-  'vim-test/vim-test',
+  "ThePrimeagen/git-worktree.nvim",
   "L3MON4D3/LuaSnip",
-  "hrsh7th/cmp-cmdline",
   "hrsh7th/cmp-buffer",
+  "hrsh7th/cmp-cmdline",
   "hrsh7th/cmp-nvim-lsp",
+  "hrsh7th/cmp-path",
   "hrsh7th/nvim-cmp",
   "lewis6991/gitsigns.nvim",
   "neovim/nvim-lspconfig",
+  "nvim-tree/nvim-tree.lua",
+  "nvim-tree/nvim-web-devicons",
+  "preservim/vimux",
   "rafamadriz/friendly-snippets",
   "saadparwaiz1/cmp_luasnip",
   "tpope/vim-fugitive",
   "tpope/vim-surround",
   "williamboman/mason-lspconfig.nvim",
   "williamboman/mason.nvim",
-  "hrsh7th/cmp-path",
-  "nvim-tree/nvim-tree.lua",
-  "nvim-tree/nvim-web-devicons",
-  "preservim/vimux",
+  'vim-test/vim-test',
   {
     "christoomey/vim-tmux-navigator",
     cmd = {
@@ -288,3 +289,12 @@ require("catppuccin").setup({
   }
 })
 vim.cmd.colorscheme "catppuccin-mocha"
+
+-- git worktree
+require("telescope").load_extension("git_worktree")
+
+require("git-worktree").setup({})
+
+vim.keymap.set("n", "<leader>gg", ":lua require('telescope').extensions.git_worktree.git_worktrees()<cr>", default_opts)
+vim.keymap.set("n", "<leader>gn", ":lua require('telescope').extensions.git_worktree.create_git_worktree()<cr>", default_opts)
+
