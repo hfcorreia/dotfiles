@@ -34,6 +34,11 @@ require("lazy").setup({
   "williamboman/mason.nvim",
   'vim-test/vim-test',
   {
+    "ThePrimeagen/harpoon",
+    branch = "harpoon2",
+    dependencies = { "nvim-lua/plenary.nvim" }
+  },
+  {
     "christoomey/vim-tmux-navigator",
     cmd = {
       "TmuxNavigateLeft",
@@ -296,5 +301,17 @@ require("telescope").load_extension("git_worktree")
 require("git-worktree").setup({})
 
 vim.keymap.set("n", "<leader>gg", ":lua require('telescope').extensions.git_worktree.git_worktrees()<cr>", default_opts)
-vim.keymap.set("n", "<leader>gn", ":lua require('telescope').extensions.git_worktree.create_git_worktree()<cr>", default_opts)
+vim.keymap.set("n", "<leader>gn", ":lua require('telescope').extensions.git_worktree.create_git_worktree()<cr>",
+  default_opts)
 
+-- harpoon
+local harpoon = require("harpoon")
+
+harpoon:setup({})
+
+vim.keymap.set("n", "<leader>a", function() harpoon:list():append() end)
+vim.keymap.set("n", "<leader><leader>", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
+vim.keymap.set("n", "<leader>1", function() harpoon:list():select(1) end)
+vim.keymap.set("n", "<leader>2", function() harpoon:list():select(2) end)
+vim.keymap.set("n", "<leader>3", function() harpoon:list():select(3) end)
+vim.keymap.set("n", "<leader>4", function() harpoon:list():select(4) end)
