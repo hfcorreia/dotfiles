@@ -65,6 +65,8 @@ require("lazy").setup({
 
 -- Base Vim Configs
 vim.o.termguicolors = true
+vim.o.hlsearch = true
+vim.o.incsearch = true
 vim.opt.clipboard = "unnamedplus"
 vim.opt.mouse = "r"
 vim.opt.tabstop = 2
@@ -72,6 +74,10 @@ vim.opt.shiftwidth = 2
 vim.opt.softtabstop = 2
 vim.opt.expandtab = true
 vim.opt.number = true
+
+-- This unsets the 'last search pattern' register by hitting <esc><esc>
+vim.keymap.set("n", "<esc><esc>", ":noh<cr>")
+
 
 -- Mappings
 vim.g.mapleader = ","
