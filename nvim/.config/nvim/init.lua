@@ -15,7 +15,7 @@ vim.opt.rtp:prepend(lazypath)
 -- lazy.nvim config
 require("lazy").setup({
   "ThePrimeagen/git-worktree.nvim",
-  "L3MON4D3/LuaSnip",
+  "bronson/vim-trailing-whitespace",
   "hrsh7th/cmp-buffer",
   "hrsh7th/cmp-cmdline",
   "hrsh7th/cmp-nvim-lsp",
@@ -33,6 +33,10 @@ require("lazy").setup({
   "williamboman/mason-lspconfig.nvim",
   "williamboman/mason.nvim",
   'vim-test/vim-test',
+  {
+    "L3MON4D3/LuaSnip",
+    dependencies = { "rafamadriz/friendly-snippets" },
+  },
   {
     "ThePrimeagen/harpoon",
     branch = "harpoon2",
@@ -216,6 +220,9 @@ vim.api.nvim_create_autocmd('LspAttach', {
 
 -- CMP Config
 local cmp = require("cmp")
+
+require("luasnip.loaders.from_vscode").lazy_load()
+
 cmp.setup({
   mapping = cmp.mapping.preset.insert({
     ['<C-b>'] = cmp.mapping.scroll_docs(-4),
