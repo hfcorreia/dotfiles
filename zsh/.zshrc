@@ -19,7 +19,6 @@ source $ZPLUG_HOME/init.zsh
 zplug "agkozak/zsh-z"
 
 # oh-my-zsh
-zplug "plugins/git", from:oh-my-zsh
 zplug "plugins/colored-man-pages", from:oh-my-zsh
 
 # pretzo
