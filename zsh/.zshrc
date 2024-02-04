@@ -119,8 +119,7 @@ alias e="exit"
 ## Git
 alias gpull='git pull origin $(git symbolic-ref --short -q HEAD)'
 alias gpush='git push origin $(git symbolic-ref --short -q HEAD)'
-alias grebase-master!='git co master && git pull origin master && git co - && git rebase -'
-alias grebase-main!='git co main && git pull origin main && git co - && git rebase -'
+alias grebase!='git co main && git pull origin main && git co - && git rebase -'
 
 ## Vim
 alias vi='nvim'
