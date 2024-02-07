@@ -82,6 +82,8 @@ vim.opt.shiftwidth = 2
 vim.opt.softtabstop = 2
 vim.opt.expandtab = true
 vim.opt.number = true
+vim.opt.spelllang = 'en_gb';
+vim.opt.spell = true
 
 -- This unsets the 'last search pattern' register by hitting <esc><esc>
 vim.keymap.set("n", "<esc><esc>", ":noh<cr>")
