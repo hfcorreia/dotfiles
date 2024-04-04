@@ -14,6 +14,9 @@ vim.opt.rtp:prepend(lazypath)
 
 -- lazy.nvim config
 require("lazy").setup({
+  "sindrets/diffview.nvim",
+  "editorconfig/editorconfig-vim",
+  "github/copilot.vim",
   "ThePrimeagen/git-worktree.nvim",
   "bronson/vim-trailing-whitespace",
   "hrsh7th/cmp-buffer",
@@ -30,9 +33,10 @@ require("lazy").setup({
   "saadparwaiz1/cmp_luasnip",
   "tpope/vim-fugitive",
   "tpope/vim-surround",
+  "tpope/vim-rhubarb",
   "williamboman/mason-lspconfig.nvim",
   "williamboman/mason.nvim",
-  'vim-test/vim-test',
+  "vim-test/vim-test",
   {
     "folke/trouble.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
@@ -87,7 +91,7 @@ vim.opt.spell = true
 
 -- This unsets the 'last search pattern' register by hitting <esc><esc>
 vim.keymap.set("n", "<esc><esc>", ":noh<cr>")
-
+vim.keymap.set("i", "jk", "<esc>", { noremap = true })
 
 -- Mappings
 vim.g.mapleader = ","
@@ -152,6 +156,9 @@ vim.keymap.set("n", "<leader>fa", builtin.find_files, default_opts)
 vim.keymap.set("n", "<leader>fg", builtin.live_grep, default_opts)
 vim.keymap.set("n", "<leader>fb", builtin.buffers, default_opts)
 vim.keymap.set("n", "<leader>fd", builtin.git_status, default_opts)
+vim.keymap.set("n", "gr", builtin.lsp_references, default_opts)
+vim.keymap.set("n", "gd", builtin.lsp_definitions, default_opts)
+vim.keymap.set("n", "gtd", builtin.lsp_type_definitions, default_opts)
 
 require('telescope').load_extension('fzf')
 
@@ -206,7 +213,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
     -- See `:help vim.lsp.*` for documentation on any of the below functions
     local opts = { buffer = ev.buf }
     vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
-    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
     vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
     vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
     vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, opts)
@@ -217,7 +223,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, opts)
     vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
     vim.keymap.set({ 'n', 'v' }, '<leader>ca', vim.lsp.buf.code_action, opts)
-    vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
     vim.keymap.set('n', '<leader>=', function()
       vim.lsp.buf.format { async = true }
     end, opts)

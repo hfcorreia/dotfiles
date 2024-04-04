@@ -10,9 +10,6 @@ then
   FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
 fi
 
-# Source ASDF
-. $(brew --prefix asdf)/libexec/asdf.sh
-
 # Load zplug
 source $ZPLUG_HOME/init.zsh
 
@@ -33,7 +30,8 @@ zplug "modules/utility",  from:prezto
 
 zplug "wfxr/forgit"
 
-zplug "~/.local/zsh/plugins", from:local
+zplug "~/.local/zsh/plugins/dev/", from:local
+zplug "~/.local/zsh/plugins/rebase/", from:local
 
 zplug "zsh-users/zsh-completions",              defer:0
 zplug "zsh-users/zsh-autosuggestions",          defer:2, on:"zsh-users/zsh-completions"
@@ -119,7 +117,6 @@ alias e="exit"
 ## Git
 alias gpull='git pull origin $(git symbolic-ref --short -q HEAD)'
 alias gpush='git push origin $(git symbolic-ref --short -q HEAD)'
-alias grebase!='git co main && git pull origin main && git co - && git rebase -'
 
 ## Vim
 alias vi='nvim'
@@ -142,6 +139,9 @@ path=(
   /usr/local/{,s}bin(N)
   $path
 )
+
+# Source ASDF
+. $(brew --prefix asdf)/libexec/asdf.sh
 
 #################################
 # Global Env Vars
@@ -170,3 +170,4 @@ function fixup! () {
 # Bat
 #################################
 export BAT_THEME="Catppuccin-mocha"
+

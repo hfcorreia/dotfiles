@@ -29,13 +29,11 @@
 [help]
   autocorrect = 1
 [mergetool]
-  keepBackup = false
+	keepBackup = false
 [merge]
   tool = nvimdiff
 [mergetool]
-    prompt = true
-[mergetool "nvimdiff"]
-    cmd = "nvim -d \"$LOCAL\" \"$REMOTE\" \"$MERGED\" -c 'wincmd w' -c 'wincmd J'"
+    prompt = false
 [user]
   name = Hugo Correia
   email = hugo@hfcorreia.com
