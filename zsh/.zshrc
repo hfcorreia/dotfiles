@@ -71,6 +71,7 @@ fi
 # Load the plugins
 zplug load
 
+autoload -U zmv
 #################################
 # Setup ZSH History Substring
 #################################
