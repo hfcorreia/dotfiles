@@ -34,6 +34,8 @@ require("lazy").setup({
   "tpope/vim-fugitive",
   "tpope/vim-surround",
   "tpope/vim-rhubarb",
+  "tpope/vim-abolish",
+  "tpope/vim-repeat",
   "williamboman/mason-lspconfig.nvim",
   "williamboman/mason.nvim",
   "vim-test/vim-test",
