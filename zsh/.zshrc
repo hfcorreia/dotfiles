@@ -126,6 +126,9 @@ alias vim='nvim'
 ## Bat
 alias cat="bat"
 
+## Docker
+alias dps="docker ps"
+
 #################################
 # Path
 #################################
@@ -159,13 +162,6 @@ fi
 if [[ -z "$LANG" ]]; then
   export LANG='en_US.UTF-8'
 fi
-
-#################################
-# Git
-#################################
-function fixup! () {
-  git ls -n 20 | fzf | cut -d " " -f 1 | xargs git commit --no-verify --fixup
-}
 
 #################################
 # Bat
