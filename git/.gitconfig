@@ -33,10 +33,12 @@
 [merge]
   tool = nvimdiff
 [mergetool]
-    prompt = false
+  prompt = false
 [user]
   name = Hugo Correia
   email = hugo@hfcorreia.com
+[includeIf "gitdir:~/work/"]
+  path = .gitconfig.work
 [difftool]
   tool = nvimdiff
   prompt = false

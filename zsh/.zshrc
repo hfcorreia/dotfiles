@@ -28,9 +28,8 @@ zplug "modules/terminal", from:prezto
 zplug "modules/tmux", from:prezto
 zplug "modules/utility",  from:prezto
 
-zplug "wfxr/forgit"
-
 zplug "~/.local/zsh/plugins/dev/", from:local
+zplug "~/.local/zsh/plugins/work/", from:local
 zplug "~/.local/zsh/plugins/rebase/", from:local
 
 zplug "zsh-users/zsh-completions",              defer:0

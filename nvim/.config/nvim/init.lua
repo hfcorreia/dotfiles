@@ -16,7 +16,6 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
   "sindrets/diffview.nvim",
   "editorconfig/editorconfig-vim",
-  "github/copilot.vim",
   "ThePrimeagen/git-worktree.nvim",
   "bronson/vim-trailing-whitespace",
   "hrsh7th/cmp-buffer",
@@ -167,7 +166,7 @@ require('telescope').load_extension('fzf')
 -- mason vim config
 require("mason").setup()
 require("mason-lspconfig").setup({
-  ensure_installed = { "lua_ls", "elixirls", "tsserver", "solargraph", "marksman" }
+  ensure_installed = { "lua_ls", "elixirls", "tsserver", "marksman" }
 })
 
 -- setup lspconfig
