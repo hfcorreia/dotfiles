@@ -12,8 +12,12 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+-- Mappings
+vim.g.mapleader = ","
+
 -- lazy.nvim config
 require("lazy").setup({
+  "mbbill/undotree",
   "sindrets/diffview.nvim",
   "editorconfig/editorconfig-vim",
   "ThePrimeagen/git-worktree.nvim",
@@ -43,6 +47,15 @@ require("lazy").setup({
   {
     "folke/trouble.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
+    opts = {}, -- for default options, refer to the configuration section for custom setup.
+    cmd = "Trouble",
+    keys = {
+      {
+        "<leader>xx",
+        "<cmd>Trouble diagnostics toggle<cr>",
+        desc = "Diagnostics (Trouble)",
+      },
+    },
   },
   {
     "L3MON4D3/LuaSnip",
@@ -75,12 +88,32 @@ require("lazy").setup({
   { "numToStr/Comment.nvim",                    lazy = false },
   { "windwp/nvim-autopairs",                    event = "InsertEnter" },
   { "nvim-telescope/telescope.nvim",            tag = "0.1.5",        dependencies = { "nvim-lua/plenary.nvim" } },
-  { "nvim-telescope/telescope-fzf-native.nvim", build = "make" }
+  { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+  {
+    "kdheepak/lazygit.nvim",
+    lazy = true,
+    cmd = {
+      "LazyGit",
+      "LazyGitConfig",
+      "LazyGitCurrentFile",
+      "LazyGitFilter",
+      "LazyGitFilterCurrentFile",
+    },
+    -- optional for floating window border decoration
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+    },
+    -- setting the keybinding for LazyGit with 'keys' is recommended in
+    -- order to load the plugin when the command is run for the first time
+    keys = {
+      { "<leader>gs", "<cmd>LazyGit<cr>", desc = "LazyGit" }
+    }
+  }
 })
 
 -- Base Vim Configs
 vim.o.termguicolors = true
-vim.o.hlsearch = true
+vim.o.hlsearch = false
 vim.o.incsearch = true
 vim.opt.clipboard = "unnamedplus"
 vim.opt.mouse = "r"
@@ -89,15 +122,22 @@ vim.opt.shiftwidth = 2
 vim.opt.softtabstop = 2
 vim.opt.expandtab = true
 vim.opt.number = true
+vim.opt.relativenumber = true
 vim.opt.spelllang = 'en_gb';
 vim.opt.spell = true
+vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
+vim.opt.undofile = true
+
+vim.opt.scrolloff = 10
 
 -- This unsets the 'last search pattern' register by hitting <esc><esc>
 vim.keymap.set("n", "<esc><esc>", ":noh<cr>")
 vim.keymap.set("i", "jk", "<esc>", { noremap = true })
 
--- Mappings
-vim.g.mapleader = ","
+
+-- Undotree config
+vim.keymap.set('n', '<leader>ut', vim.cmd.UndotreeToggle)
+
 
 -- Treesitter config
 require("nvim-treesitter.configs").setup {
@@ -125,6 +165,12 @@ require("nvim-treesitter.configs").setup {
     enable = true
   },
 }
+
+-- trouble vim
+require("trouble").setup({
+
+
+})
 
 -- Telescope config
 require("telescope").setup({
@@ -171,7 +217,7 @@ require('telescope').load_extension('fzf')
 -- mason vim config
 require("mason").setup()
 require("mason-lspconfig").setup({
-  ensure_installed = { "lua_ls", "elixirls", "tsserver", "marksman" }
+  ensure_installed = { "lua_ls", "elixirls", "marksman" }
 })
 
 -- setup lspconfig
@@ -186,7 +232,7 @@ lsp_defaults.capabilities = vim.tbl_deep_extend(
 )
 
 -- load language servers
-local servers = { "elixirls", "solargraph", "tsserver" }
+local servers = { "elixirls", "solargraph", "ts_ls" }
 for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup {
     -- on_attach = my_custom_on_attach,
@@ -317,6 +363,9 @@ require("nvim-tree").setup({
   filters = {
     dotfiles = true,
   },
+  update_focused_file = {
+    enable = true,
+  },
 })
 
 vim.keymap.set('n', '<leader>n', ':NvimTreeFindFileToggle<CR>')
@@ -352,9 +401,6 @@ vim.keymap.set("n", "<leader>1", function() harpoon:list():select(1) end)
 vim.keymap.set("n", "<leader>2", function() harpoon:list():select(2) end)
 vim.keymap.set("n", "<leader>3", function() harpoon:list():select(3) end)
 vim.keymap.set("n", "<leader>4", function() harpoon:list():select(4) end)
-
--- trouble vim
-require("trouble").setup({})
 
 -- gitlab
 vim.cmd [[
