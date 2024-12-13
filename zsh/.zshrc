@@ -44,7 +44,7 @@ zplug "themes/sorin", from:oh-my-zsh, as:theme
 # zstyle config
 
 ## coloring
-zstyle ':prezto:module:utility:ls'    color 'yes'
+zstyle ':prezto:module:utility:ls' color 'yes'
 
 ## enable safe operations
 zstyle ':prezto:module:utility' safe-ops 'yes'
@@ -145,6 +145,9 @@ path=(
 
 # Source ASDF
 . $(brew --prefix asdf)/libexec/asdf.sh
+
+# Source local configs
+. ~/.zshrc.local
 
 #################################
 # Global Env Vars

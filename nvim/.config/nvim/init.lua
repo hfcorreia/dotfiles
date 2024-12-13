@@ -17,6 +17,8 @@ require("lazy").setup({
   "sindrets/diffview.nvim",
   "editorconfig/editorconfig-vim",
   "ThePrimeagen/git-worktree.nvim",
+  "github/copilot.vim",
+  "shumphrey/fugitive-gitlab.vim",
   "bronson/vim-trailing-whitespace",
   "hrsh7th/cmp-buffer",
   "hrsh7th/cmp-cmdline",
@@ -131,6 +133,9 @@ require("telescope").setup({
       i = {
         ["<Esc>"] = require("telescope.actions").close
       }
+    },
+    path_display = {
+      "truncate"
     }
   },
   pickers = {
@@ -240,6 +245,13 @@ cmp.setup({
     ['<C-b>'] = cmp.mapping.scroll_docs(-4),
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
     ['<C-o>'] = cmp.mapping.complete(),
+    ['<C-g>'] = function()
+      if cmp.visible_docs() then
+        cmp.close_docs()
+      else
+        cmp.open_docs()
+      end
+    end,
     ['<C-e>'] = cmp.mapping.abort(),
     ['<CR>'] = cmp.mapping.confirm({ select = true }),
   }),
@@ -249,8 +261,8 @@ cmp.setup({
     end,
   },
   sources = cmp.config.sources({
-    { name = 'path' },
     { name = 'nvim_lsp' },
+    { name = 'path' },
     { name = 'luasnip' },
   }, {
     { name = 'buffer' },
@@ -297,7 +309,7 @@ vim.keymap.set("n", "<leader>tl", ":TestLast<CR>", {})
 require("nvim-tree").setup({
   sort_by = "case_sensitive",
   view = {
-    width = 30,
+    width = 40,
   },
   renderer = {
     group_empty = true,
@@ -343,3 +355,8 @@ vim.keymap.set("n", "<leader>4", function() harpoon:list():select(4) end)
 
 -- trouble vim
 require("trouble").setup({})
+
+-- gitlab
+vim.cmd [[
+  let g:fugitive_gitlab_domains = [ 'https://gitlab.dashlane.com' ]
+]]
