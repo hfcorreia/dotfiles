@@ -1,6 +1,7 @@
 nodejs 21.6.0
-ruby 3.3.0
+ruby 3.3.6
 elixir 1.16.0-otp-26
 erlang 26.2.1
 terraform 1.9.5
 golang 1.23.1
+python 3.12.7
