@@ -21,7 +21,6 @@ vim.g.mapleader = ","
 
 -- lazy.nvim config
 require("lazy").setup({
-  "mbbill/undotree",
   "sindrets/diffview.nvim",
   "editorconfig/editorconfig-vim",
   "github/copilot.vim",
@@ -32,7 +31,7 @@ require("lazy").setup({
   "hrsh7th/cmp-nvim-lsp",
   "hrsh7th/cmp-path",
   "hrsh7th/nvim-cmp",
-  "lewis6991/gitsigns.nvim",
+  -- "lewis6991/gitsigns.nvim",
   "neovim/nvim-lspconfig",
   "nvim-tree/nvim-tree.lua",
   "nvim-tree/nvim-web-devicons",
@@ -44,8 +43,35 @@ require("lazy").setup({
   "tpope/vim-rhubarb",
   "tpope/vim-abolish",
   "tpope/vim-repeat",
-  "williamboman/mason-lspconfig.nvim",
-  "williamboman/mason.nvim",
+  {
+    "zk-org/zk-nvim",
+    config = function()
+      require("zk").setup({
+        -- See Setup section below
+        picker = "telescope",
+        picker_options = {
+          telescope = require("telescope.themes").get_ivy(),
+        },
+
+        lsp = {
+          config = {
+            name = "zk",
+            cmd = { "zk", "lsp" },
+            filetypes = { "markdown" },
+          },
+
+          -- automatically attach buffers in a zk notebook that match the given filetypes
+          auto_attach = {
+            enabled = true,
+          }
+        }
+      })
+    end
+  },
+  {
+    "mason-org/mason.nvim",
+    opts = {}
+  },
   "vim-test/vim-test",
   {
     "folke/noice.nvim",
@@ -98,7 +124,7 @@ require("lazy").setup({
     },
   },
   { "catppuccin/nvim",                          name = "catppuccin",  priority = 1000 },
-  { "nvim-treesitter/nvim-treesitter",          build = ":TSUpdate" },
+  { "nvim-treesitter/nvim-treesitter",          build = ":TSUpdate",  dependencies = { 'OXY2DEV/markview.nvim' } },
   { "numToStr/Comment.nvim",                    lazy = false },
   { "windwp/nvim-autopairs",                    event = "InsertEnter" },
   { "nvim-telescope/telescope.nvim",            tag = "0.1.5",        dependencies = { "nvim-lua/plenary.nvim" } },
@@ -122,12 +148,62 @@ require("lazy").setup({
     keys = {
       { "<leader>gs", "<cmd>LazyGit<cr>", desc = "LazyGit" }
     }
-  }
+  },
+  {
+    "olimorris/codecompanion.nvim",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-treesitter/nvim-treesitter",
+    },
+    opts = {
+      display = {
+        chat = {
+          window = {
+            position = "right",
+            width = 0.40
+          }
+        }
+      },
+
+      strategies = {
+        chat = {
+          adapter = "copilot",
+        },
+        inline = {
+          adapter = "copilot",
+        }
+      },
+      opts = {
+        -- Set debug logging
+        log_level = "DEBUG",
+      },
+    },
+  },
+  {
+    "OXY2DEV/markview.nvim",
+    event = 'VeryLazy',
+    opts = {
+      preview = {
+        filetypes = { "markdown", "codecompanion" },
+        ignore_buftypes = {},
+      },
+    },
+  },
+  {
+    "echasnovski/mini.diff",
+    config = function()
+      local diff = require("mini.diff")
+      diff.setup({
+        -- Disabled by default
+        source = diff.gen_source.none(),
+      })
+    end,
+  },
 })
 
 -- Base Vim Configs
 vim.o.termguicolors = true
-vim.o.hlsearch = false
+vim.o.hlsearch = true
 vim.o.incsearch = true
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
@@ -137,8 +213,6 @@ vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.spelllang = 'en_gb';
 vim.opt.spell = true
-vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
-vim.opt.undofile = true
 
 vim.opt.scrolloff = 10
 
@@ -166,9 +240,6 @@ vim.keymap.set({ "n", "v" }, "<leader>d", "\"_d")
 
 -- super rename
 vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
-
--- Undotree config
-vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle)
 
 -- Foramtting
 vim.keymap.set("n", "<leader>f", vim.lsp.buf.format)
@@ -242,12 +313,6 @@ vim.keymap.set("n", "gtd", builtin.lsp_type_definitions, default_opts)
 
 require('telescope').load_extension('fzf')
 
--- mason vim config
-require("mason").setup()
-require("mason-lspconfig").setup({
-  ensure_installed = { "lua_ls", "elixirls", "marksman" }
-})
-
 -- setup lspconfig
 local lspconfig = require("lspconfig")
 
@@ -293,7 +358,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
     -- See `:help vim.lsp.*` for documentation on any of the below functions
     local opts = { buffer = ev.buf }
     vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
-    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+    vim.keymap.set('n', '<leader>K', vim.lsp.buf.hover, opts)
     vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
     vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, opts)
     vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, opts)
@@ -366,7 +431,7 @@ require("Comment").setup()
 require("nvim-autopairs").setup()
 
 -- Gitsigns config
-require("gitsigns").setup()
+-- require("gitsigns").setup()
 
 -- vim-test
 vim.cmd [[
@@ -402,7 +467,7 @@ vim.keymap.set('n', '<leader>n', ':NvimTreeFindFileToggle<CR>')
 require("catppuccin").setup({
   integrations = {
     cmp = true,
-    gitsigns = true,
+    -- gitsigns = true,
     nvimtree = true,
     treesitter = true,
   }
@@ -446,3 +511,120 @@ vim.keymap.set("n", "<leader>4", function() harpoon:list():select(4) end)
 vim.cmd [[
   let g:fugitive_gitlab_domains = [ 'https://gitlab.dashlane.com' ]
 ]]
+
+-- codecompanion
+-- vim.keymap.set({ "n", "v" }, "<C-a>", "<cmd>CodeCompanionActions<cr>", { noremap = true, silent = true })
+-- vim.keymap.set({ "n", "v" }, "<LocalLeader>a", "<cmd>CodeCompanionChat Toggle<cr>", { noremap = true, silent = true })
+
+-- Toggle CodeCompanion chat window
+vim.keymap.set({ "n", "v" }, "<leader>,", "<cmd>CodeCompanionChat Toggle<cr>", { noremap = true, silent = true })
+
+-- Notes
+local zk_opts = { noremap = true, silent = false }
+
+-- Create a new note after asking for its title.
+vim.api.nvim_set_keymap("n", "<leader>zn", "<Cmd>ZkNew { title = vim.fn.input('Title: ') }<CR>", zk_opts)
+
+-- Open notes.
+vim.api.nvim_set_keymap("n", "<leader>zo", "<Cmd>ZkNotes { sort = { 'modified' } }<CR>", zk_opts)
+-- Open notes associated with the selected tags.
+vim.api.nvim_set_keymap("n", "<leader>zt", "<Cmd>ZkTags<CR>", zk_opts)
+
+-- Search for the notes matching a given query.
+vim.api.nvim_set_keymap("n", "<leader>zf",
+  "<Cmd>ZkNotes { sort = { 'modified' }, match = { vim.fn.input('Search: ') } }<CR>", zk_opts)
+-- Search for the notes matching the current visual selection.
+vim.api.nvim_set_keymap("v", "<leader>zf", ":'<,'>ZkMatch<CR>", zk_opts)
+
+-- Terminal integration
+vim.api.nvim_create_user_command('TermFloat', function()
+  -- Create buffer
+  local buf = vim.api.nvim_create_buf(false, true)
+
+  -- Floating window size and position
+  local width = math.floor(vim.o.columns * 0.8)
+  local height = math.floor(vim.o.lines * 0.8)
+  local row = math.floor((vim.o.lines - height) / 2)
+  local col = math.floor((vim.o.columns - width) / 2)
+
+  local opts = {
+    relative = 'editor',
+    style = 'minimal',
+    border = 'rounded',
+    width = width,
+    height = height,
+    row = row,
+    col = col,
+  }
+
+  local win = vim.api.nvim_open_win(buf, true, opts)
+
+  -- Start terminal in the buffer
+  vim.fn.termopen(os.getenv('SHELL'), {
+    on_exit = function(_, exit_code, _)
+      -- Automatically close the floating window when terminal exits
+      if vim.api.nvim_win_is_valid(win) then
+        vim.api.nvim_win_close(win, true)
+      end
+    end,
+  })
+
+  -- Enter insert mode for terminal input
+  vim.cmd("startinsert")
+
+  -- Optional: disable number and relativenumber in terminal window
+  vim.wo.number = false
+  vim.wo.relativenumber = false
+end, {})
+
+vim.api.nvim_create_user_command('TermFloatCmd', function(opts)
+  local cmd = opts.args
+  if cmd == "" then
+    print("Usage: :TermFloatCmd <command>")
+    return
+  end
+
+  local buf = vim.api.nvim_create_buf(false, true)
+
+  local width = math.floor(vim.o.columns * 0.8)
+  local height = math.floor(vim.o.lines * 0.8)
+  local row = math.floor((vim.o.lines - height) / 2)
+  local col = math.floor((vim.o.columns - width) / 2)
+
+  local opts_win = {
+    relative = 'editor',
+    style = 'minimal',
+    border = 'rounded',
+    width = width,
+    height = height,
+    row = row,
+    col = col,
+  }
+
+  vim.api.nvim_open_win(buf, true, opts_win)
+
+  -- Run the command in terminal WITHOUT auto-close
+  vim.fn.termopen(cmd)
+
+  vim.cmd("startinsert")
+
+  vim.wo.number = false
+  vim.wo.relativenumber = false
+end, {
+  nargs = '+', -- accept one or more arguments
+  complete = 'shellcmd',
+})
+
+vim.keymap.set('x', '<leader>S', function()
+  -- Yank the visual selection into the unnamed register
+  vim.cmd('normal! y')
+  local reg_text = vim.fn.getreg('"')
+  if reg_text == '' then
+    print("No text selected or yanked")
+    return
+  end
+  -- Escape double quotes
+  reg_text = reg_text:gsub('"', '\\"')
+  -- Run TermFloatCmd with the yanked text
+  vim.cmd('TermFloatCmd ' .. reg_text)
+end, { silent = true, noremap = true })

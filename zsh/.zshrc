@@ -32,6 +32,9 @@ zplug "~/.local/zsh/plugins/dev/", from:local
 zplug "~/.local/zsh/plugins/work/", from:local
 zplug "~/.local/zsh/plugins/rebase/", from:local
 zplug "~/.local/zsh/plugins/flatten/", from:local
+zplug "~/.local/zsh/plugins/renamer/", from:local
+zplug "~/.local/zsh/plugins/tfps/", from:local
+zplug "~/.local/zsh/plugins/aws/", from:local
 
 zplug "zsh-users/zsh-completions",              defer:0
 zplug "zsh-users/zsh-autosuggestions",          defer:2, on:"zsh-users/zsh-completions"
@@ -166,17 +169,21 @@ fi
 if [[ -z "$LANG" ]]; then
   export LANG='en_US.UTF-8'
 fi
-
 #################################
 # Bat
 #################################
 export BAT_THEME="Catppuccin-mocha"
 
-
+#################################
 # pnpm
+#################################
 export PNPM_HOME="/Users/hcorreia/Library/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
-# pnpm end
+
+#################################
+# Notes directory
+#################################
+export ZK_NOTEBOOK_DIR="$HOME/notes"
