@@ -9,7 +9,12 @@ return {
             vim.g.fugitive_gitlab_domains = { "https://gitlab.dashlane.com" }
         end,
     },
-    { "tpope/vim-fugitive" },
+    {
+        "tpope/vim-fugitive",
+        init = function()
+            vim.keymap.set("n", "<leader>gs", vim.cmd.Git, { desc = "Git Status" })
+        end,
+    },
     -- {
     --   "kdheepak/lazygit.nvim",
     --   lazy = true,
