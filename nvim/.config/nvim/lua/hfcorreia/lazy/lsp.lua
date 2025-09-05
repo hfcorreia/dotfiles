@@ -1,3 +1,9 @@
+local language_servers = {
+    "lua_ls",
+    "ts_ls",
+    "terraform-ls"
+}
+
 return {
     {
         "mason-org/mason.nvim",
@@ -9,7 +15,7 @@ return {
     {
         "mason-org/mason-lspconfig.nvim",
         lazy = true,
-        ensure_installed = { "lua_ls", "ts_ls" },
+        ensure_installed = language_servers,
     },
     {
         "L3MON4D3/LuaSnip",
@@ -147,6 +153,9 @@ return {
 
             -- lspconfig for ts_ls
             require("lspconfig").ts_ls.setup({})
+
+            -- lspconfig for terraform-ls
+            require("lspconfig").terraformls.setup({})
         end
     }
 }
