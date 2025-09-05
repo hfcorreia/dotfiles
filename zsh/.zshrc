@@ -128,10 +128,6 @@ alias vim='nvim'
 
 ## Bat
 alias cat="bat"
-
-## Docker
-alias dps="docker ps"
-
 #################################
 # Path
 #################################

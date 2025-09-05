@@ -1,7 +1,7 @@
 #!/bin/zsh
 
 # AWS CLI Helper Functions with fzf Integration
-function aws-whoami() {
+function aws_whoami() {
   local option="${1:-}"
   local PROFILE="${AWS_PROFILE:-default}"
 
@@ -39,7 +39,7 @@ function aws-whoami() {
 function aws_check_login() {
   aws sts get-caller-identity > /dev/null 2>&1
   if [[ $? -eq 0 ]]; then
-    aws-whoami
+    aws_whoami
     return 0
   fi
 
@@ -72,7 +72,7 @@ function aws_check_login() {
   fi
 
   export AWS_PROFILE="$selected_profile"
-  aws-whoami
+  aws_whoami
 }
 
 # Select an ECS cluster using fzf
