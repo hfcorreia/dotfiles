@@ -105,8 +105,8 @@ return {
                     end,
                 })
             end)
-            vim.keymap.set('n', '<leader>fg', function()
-                builtin.grep_string({ search = vim.fn.input("Grep > ") })
+            vim.keymap.set('n', '<leader>fs', function()
+                builtin.grep_string({ search = vim.fn.input("Search > ") })
             end)
         end
     },
