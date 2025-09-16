@@ -143,10 +143,6 @@ path=(
   $path
 )
 
-# Source ASDF
-export ASDF_DATA_DIR="$HOME/.asdf"
-export PATH="$ASDF_DATA_DIR/shims:$PATH"
-
 # Source local configs
 . ~/.zshrc.local
 
