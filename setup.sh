@@ -10,6 +10,9 @@ echo "Running brew bundle"
 cd ~/.dotfiles
 brew bundle
 
+echo "Create local zshrc"
+touch ~/.zshrc.local
+
 echo "Install bat theme"
 wget -P "$(bat --config-dir)/themes" https://github.com/catppuccin/bat/raw/main/themes/Catppuccin%20Mocha.tmTheme
 bat cache --build
