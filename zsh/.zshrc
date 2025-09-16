@@ -46,6 +46,7 @@ zplug "themes/sorin", from:oh-my-zsh, as:theme
 
 #################################
 # zstyle config
+#################################
 
 ## coloring
 zstyle ':prezto:module:utility:ls' color 'yes'
@@ -106,14 +107,8 @@ export FZF_TMUX_HEIGHT=20
 export FZF_DEFAULT_OPTS='--height 20% --layout=reverse'
 
 #################################
-# Setup direnv
-#################################
-eval "$(direnv hook zsh)"
-
-#################################
 # Aliases
 #################################
-
 ## System
 alias c="clear"
 alias e="exit"
@@ -167,15 +162,11 @@ fi
 export BAT_THEME="Catppuccin-mocha"
 
 #################################
-# pnpm
-#################################
-export PNPM_HOME="/Users/hcorreia/Library/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-
-#################################
 # Notes directory
 #################################
 export ZK_NOTEBOOK_DIR="$HOME/notes"
+
+#################################
+# Mise
+#################################
+eval "$(mise activate zsh)"
