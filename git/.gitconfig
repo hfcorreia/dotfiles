@@ -40,7 +40,7 @@
   name = Hugo Correia
   email = hugo@hfcorreia.com
 [includeIf "gitdir:~/work/"]
-  path = .gitconfig.work
+  path = ~/work/.gitconfig.work
 [difftool]
   tool = nvimdiff
   prompt = false
