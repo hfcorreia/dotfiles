@@ -1,7 +1,7 @@
-local language_servers = {
+local mason_deps = {
     "lua_ls",
     "ts_ls",
-    "terraform-ls"
+    "terraform-ls",
 }
 
 return {
@@ -14,8 +14,14 @@ return {
     },
     {
         "mason-org/mason-lspconfig.nvim",
-        lazy = true,
-        ensure_installed = language_servers,
+        opts = {
+            ensure_installed = mason_deps,
+            automatic_enable = true,
+        },
+        dependencies = {
+            "mason-org/mason.nvim",
+            "neovim/nvim-lspconfig"
+        },
     },
     {
         "L3MON4D3/LuaSnip",

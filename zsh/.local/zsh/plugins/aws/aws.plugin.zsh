@@ -153,3 +153,43 @@ function aws_ssm_session() {
   return 0
 }
 
+function aws_list_ec2_instances() {
+  aws_check_login || return 1
+
+  local query='Reservations[].Instances[].[InstanceId,Tags[?Key==`Name`].Value | [0],State.Name,InstanceType,PrivateIpAddress,PublicIpAddress,ImageId]'
+  local header_fields=("InstanceId" "Name" "State" "Type" "Private IP" "Public IP" "ImageId")
+  local header
+  header=$(printf "%-20s %-30s %-15s %-15s %-15s %-15s %-20s\n" "${header_fields[@]}")
+
+  local instances
+  instances=$(aws ec2 describe-instances --query "$query" --output text)
+
+  if [[ -z "$instances" ]]; then
+    echo "No EC2 instances found."
+    return 1
+  fi
+
+  local selected_line
+  selected_line=$(echo "$instances" | \
+    awk '{printf "%-20s %-30s %-15s %-15s %-15s %-15s %-20s\n", $1, $2, $3, $4, $5, $6, $7}' | \
+    fzf --header="$header" \
+        --prompt="Select EC2 Instance: " \
+        --height=40% \
+        --layout=reverse \
+        --border)
+
+  if [[ -z "$selected_line" ]]; then
+    echo "No instance selected."
+    return 1
+  fi
+  #
+  # Extract InstanceId (first field)
+  local instance_id
+  instance_id=$(echo "$selected_line" | awk '{print $1}')
+
+  read "ssm_confirm?Connect to instance $instance_id via SSM session? (y/N): "
+  if [[ "$ssm_confirm" =~ ^[Yy]$ ]]; then
+    echo "Starting SSM session to the EC2 instance..."
+    aws ssm start-session --target "$instance_id" --document-name AWS-StartInteractiveCommand --parameters command="bash -l"
+  fi
+}
