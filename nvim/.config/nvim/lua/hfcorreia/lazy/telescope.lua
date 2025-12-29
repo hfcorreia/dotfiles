@@ -87,7 +87,7 @@ return {
             vim.keymap.set("n", "gd", builtin.lsp_definitions, default_opts)
             vim.keymap.set("n", "gtd", builtin.lsp_type_definitions, default_opts)
 
-            vim.keymap.set('n', '<leader>fc', function()
+            vim.keymap.set('n', '<leader>fw', function()
                 local word = vim.fn.expand("<cword>")
                 builtin.grep_string({
                     search = word,
@@ -96,7 +96,7 @@ return {
                     end,
                 })
             end)
-            vim.keymap.set('n', '<leader>fC', function()
+            vim.keymap.set('n', '<leader>fW', function()
                 local word = vim.fn.expand("<cWORD>")
                 builtin.grep_string({
                     search = word,
@@ -105,7 +105,7 @@ return {
                     end,
                 })
             end)
-            vim.keymap.set('n', '<leader>fs', function()
+            vim.keymap.set('n', '<leader>fS', function()
                 builtin.grep_string({ search = vim.fn.input("Search > ") })
             end)
         end

@@ -1,11 +1,11 @@
 #!/bin/zsh
 
 function tfps() {
-  local tempfile created_count destroyed_count updated_count imported_count pid s line
+  local tempfile created_count destroyed_count updated_count imported_count pid line
 
   tempfile=$(mktemp -t tfps) || { echo "Failed to create tempfile"; return 1; }
 
-  terraform plan "$@" >| "$tempfile" &
+  terraform plan -parallelism=40 "$@" >| "$tempfile" &
   pid=$!
 
   while kill -0 $pid 2>/dev/null; do
