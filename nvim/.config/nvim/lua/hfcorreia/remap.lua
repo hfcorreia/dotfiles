@@ -29,3 +29,19 @@ vim.keymap.set("n", "<leader>Y", [["+Y]])
 
 -- Does a rename of the word under the cursor in the whole file
 vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
+
+-- Toggle quickfix window
+local function toggle_quickfix()
+    local qf_exists = false
+    for _, win in pairs(vim.fn.getwininfo()) do
+        if win["quickfix"] == 1 then
+            qf_exists = true
+        end
+    end
+    if qf_exists == true then
+        vim.cmd "cclose"
+    else
+        vim.cmd "copen"
+    end
+end
+vim.keymap.set("n", "<leader>q", toggle_quickfix, { desc = "Toggle quickfix window" })

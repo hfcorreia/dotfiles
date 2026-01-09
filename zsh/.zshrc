@@ -10,6 +10,9 @@ then
   FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
 fi
 
+# Setup mise
+eval "$(mise activate zsh)"
+
 # Load zplug
 source $ZPLUG_HOME/init.zsh
 
@@ -35,7 +38,7 @@ zplug "~/.local/zsh/plugins/flatten/", from:local
 zplug "~/.local/zsh/plugins/renamer/", from:local
 zplug "~/.local/zsh/plugins/tfps/", from:local
 zplug "~/.local/zsh/plugins/aws/", from:local
-
+ 
 zplug "zsh-users/zsh-completions",              defer:0
 zplug "zsh-users/zsh-autosuggestions",          defer:2, on:"zsh-users/zsh-completions"
 zplug "zsh-users/zsh-syntax-highlighting",      defer:2, on:"zsh-users/zsh-autosuggestions"
@@ -88,6 +91,7 @@ if zplug check zsh-users/zsh-autosuggestions; then
     ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(history-substring-search-up history-substring-search-down)
     ZSH_AUTOSUGGEST_CLEAR_WIDGETS=("${(@)ZSH_AUTOSUGGEST_CLEAR_WIDGETS:#(up|down)-line-or-history}")
 fi
+
 #################################
 # Setup fzf
 #################################
@@ -166,7 +170,3 @@ export BAT_THEME="Catppuccin-mocha"
 #################################
 export ZK_NOTEBOOK_DIR="$HOME/notes"
 
-#################################
-# Mise
-#################################
-eval "$(mise activate zsh)"
