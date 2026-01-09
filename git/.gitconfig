@@ -24,7 +24,7 @@
   branch = auto
 [core]
   editor = nvim
-  excludesfile = ~/.gitignore
+  excludesfile = ~/.gitignore.home
 	autocrlf = input
 [init]
   defaultBranch = main
