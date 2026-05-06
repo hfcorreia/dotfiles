@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+sessions=$(tmux list-sessions -F '#{session_name}' | grep -v "^$(tmux display-message -p '#S')$")
+
+if [[ -z $sessions ]]; then
+    echo "No other sessions to kill."
+    read -n 1
+    exit 0
+fi
+
+selected=$(echo "$sessions" | fzf --reverse --multi)
+
+if [[ -z $selected ]]; then
+    exit 0
+fi
+
+echo "Kill these sessions?"
+echo "$selected"
+read -p "[y/N]: " confirm
+
+if [[ $confirm == [yY] ]]; then
+    echo "$selected" | xargs -I{} tmux kill-session -t {}
+fi

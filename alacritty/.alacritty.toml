@@ -500,3 +500,4 @@ import = [
 ]
 
 [terminal]
+osc52 = "CopyPaste"

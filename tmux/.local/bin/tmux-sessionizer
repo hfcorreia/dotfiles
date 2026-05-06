@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+dirs=(~/work ~/dev)
+
+if [[ $# -eq 1 ]]; then
+    selected=$1
+else
+    selected=$(find "${dirs[@]}" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | fzf --reverse)
+fi
+
+if [[ -z $selected ]]; then
+    exit 0
+fi
+
+default_name=$(basename "$selected" | tr . _)
+
+if ! tmux has-session -t="$default_name" 2>/dev/null; then
+    read -p "Session name [$default_name]: " custom_name
+    selected_name=${custom_name:-$default_name}
+    selected_name=$(echo "$selected_name" | tr . _)
+    tmux new-session -ds "$selected_name" -c "$selected"
+else
+    selected_name=$default_name
+fi
+
+if [[ -z $TMUX ]]; then
+    tmux attach-session -t "$selected_name"
+else
+    tmux switch-client -t "$selected_name"
+fi
