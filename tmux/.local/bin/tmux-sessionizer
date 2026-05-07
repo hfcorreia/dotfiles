@@ -2,29 +2,194 @@
 
 dirs=(~/work ~/dev)
 
+get_default_branch() {
+  local repo_dir="$1"
+  if git -C "$repo_dir" show-ref --verify --quiet refs/heads/main; then
+    echo "main"
+  elif git -C "$repo_dir" show-ref --verify --quiet refs/heads/master; then
+    echo "master"
+  else
+    echo "main"
+  fi
+}
+
+switch_or_attach() {
+  local session_name="$1"
+  if [[ -z $TMUX ]]; then
+    tmux attach-session -t "$session_name"
+  else
+    tmux switch-client -t "$session_name"
+  fi
+}
+
+# Step 1: Select repo(s) — fzf --multi allows Tab to select multiple
 if [[ $# -eq 1 ]]; then
-    selected=$1
+  selected=$1
 else
-    selected=$(find "${dirs[@]}" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | fzf --reverse)
+  selected=$(echo -e "[New directory]\n$(find "${dirs[@]}" -mindepth 1 -maxdepth 1 -type d 2>/dev/null)" | fzf --multi --reverse)
 fi
 
 if [[ -z $selected ]]; then
+  exit 0
+fi
+
+# Handle new directory creation
+if [[ "$selected" == "[New directory]" ]]; then
+  read -p "Directory name: " dir_name
+  if [[ -z $dir_name ]]; then
     exit 0
+  fi
+  # Choose parent directory
+  parent=$(printf '%s\n' "${dirs[@]}" | fzf --reverse --prompt="Parent dir: ")
+  if [[ -z $parent ]]; then
+    exit 0
+  fi
+  parent="${parent/#\~/$HOME}"
+  new_dir="${parent}/${dir_name}"
+  mkdir -p "$new_dir"
+
+  session_name=$(echo "$dir_name" | tr . _)
+  if ! tmux has-session -t="$session_name" 2>/dev/null; then
+    tmux new-session -ds "$session_name" -c "$new_dir" -n "$dir_name"
+  fi
+  switch_or_attach "$session_name"
+  exit 0
 fi
 
-default_name=$(basename "$selected" | tr . _)
+mapfile -t repos <<< "$selected"
 
-if ! tmux has-session -t="$default_name" 2>/dev/null; then
-    read -p "Session name [$default_name]: " custom_name
-    selected_name=${custom_name:-$default_name}
-    selected_name=$(echo "$selected_name" | tr . _)
-    tmux new-session -ds "$selected_name" -c "$selected"
-else
-    selected_name=$default_name
+# Step 2: Choose mode — build options with existing worktree branches
+options="[Open repo directly]\n[New worktree]"
+
+# Collect existing branches per repo, then intersect if multi-repo
+declare -A branch_counts
+total_repos=${#repos[@]}
+
+for repo in "${repos[@]}"; do
+  parent=$(dirname "$repo")
+  repo_name=$(basename "$repo")
+  wt_base="${parent}/worktrees"
+  if [[ -d "$wt_base" ]]; then
+    while IFS= read -r branch_dir; do
+      [[ -d "$branch_dir" ]] || continue
+      branch=$(basename "$branch_dir")
+      # Check if this branch has a subdir for this repo
+      if [[ -d "${branch_dir}/${repo_name}" ]]; then
+        branch_counts[$branch]=$(( ${branch_counts[$branch]:-0} + 1 ))
+      fi
+    done < <(find "$wt_base" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | sort)
+  fi
+  # Also check legacy <repo>-worktrees layout for single-repo compat
+  legacy_wt="${repo}-worktrees"
+  if [[ -d "$legacy_wt" && $total_repos -eq 1 ]]; then
+    while IFS= read -r branch_dir; do
+      [[ -d "$branch_dir" ]] || continue
+      branch=$(basename "$branch_dir")
+      branch_counts[$branch]=$(( ${branch_counts[$branch]:-0} + 1 ))
+    done < <(find "$legacy_wt" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | sort)
+  fi
+done
+
+# Show branches that exist for ALL selected repos
+for branch in $(echo "${!branch_counts[@]}" | tr ' ' '\n' | sort); do
+  if [[ ${branch_counts[$branch]} -ge $total_repos ]]; then
+    options+="\n${branch}"
+  fi
+done
+
+mode=$(echo -e "$options" | fzf --reverse --prompt="Mode: ")
+
+if [[ -z $mode ]]; then
+  exit 0
 fi
 
-if [[ -z $TMUX ]]; then
-    tmux attach-session -t "$selected_name"
-else
-    tmux switch-client -t "$selected_name"
-fi
+case $mode in
+  "[Open repo directly]")
+    default_name=$(basename "${repos[0]}" | tr . _)
+    if ! tmux has-session -t="$default_name" 2>/dev/null; then
+      read -p "Session name [$default_name]: " custom_name
+      selected_name=${custom_name:-$default_name}
+      selected_name=$(echo "$selected_name" | tr . _)
+      tmux new-session -ds "$selected_name" -c "${repos[0]}" -n "$(basename "${repos[0]}")"
+      for i in $(seq 1 $((${#repos[@]} - 1))); do
+        tmux new-window -t "$selected_name" -c "${repos[$i]}" -n "$(basename "${repos[$i]}")"
+      done
+    else
+      selected_name=$default_name
+    fi
+    switch_or_attach "$selected_name"
+    ;;
+
+  "[New worktree]")
+    read -p "Branch name: " branch_name
+    if [[ -z $branch_name ]]; then
+      exit 0
+    fi
+
+    session_name=$(echo "$branch_name" | tr . _)
+
+    # If session already exists, just switch to it
+    if tmux has-session -t="$session_name" 2>/dev/null; then
+      switch_or_attach "$session_name"
+      exit 0
+    fi
+
+    # Create worktrees and collect paths
+    wt_paths=()
+    for repo in "${repos[@]}"; do
+      parent=$(dirname "$repo")
+      repo_name=$(basename "$repo")
+      wt_path="${parent}/worktrees/${branch_name}/${repo_name}"
+
+      if [[ ! -d "$wt_path" ]]; then
+        default_branch=$(get_default_branch "$repo")
+        git -C "$repo" fetch origin "$default_branch"
+        git -C "$repo" worktree add "$wt_path" -b "$branch_name" "origin/${default_branch}"
+      fi
+      wt_paths+=("$wt_path")
+    done
+
+    # Create session with one window per repo
+    tmux new-session -ds "$session_name" -c "${wt_paths[0]}" -n "$(basename "${repos[0]}")"
+    for i in $(seq 1 $((${#repos[@]} - 1))); do
+      tmux new-window -t "$session_name" -c "${wt_paths[$i]}" -n "$(basename "${repos[$i]}")"
+    done
+
+    switch_or_attach "$session_name"
+    ;;
+
+  *)
+    # Selected an existing worktree branch
+    branch_name="$mode"
+    session_name=$(echo "$branch_name" | tr . _)
+
+    if tmux has-session -t="$session_name" 2>/dev/null; then
+      switch_or_attach "$session_name"
+      exit 0
+    fi
+
+    # Resolve worktree paths for each repo
+    wt_paths=()
+    for repo in "${repos[@]}"; do
+      parent=$(dirname "$repo")
+      repo_name=$(basename "$repo")
+      wt_path="${parent}/worktrees/${branch_name}/${repo_name}"
+      # Fallback to legacy layout for single-repo
+      if [[ ! -d "$wt_path" && ${#repos[@]} -eq 1 ]]; then
+        legacy_path="${repo}-worktrees/${branch_name}"
+        if [[ -d "$legacy_path" ]]; then
+          wt_path="$legacy_path"
+        fi
+      fi
+      wt_paths+=("$wt_path")
+    done
+
+    # Create session with one window per repo
+    tmux new-session -ds "$session_name" -c "${wt_paths[0]}" -n "$(basename "${repos[0]}")"
+    for i in $(seq 1 $((${#repos[@]} - 1))); do
+      tmux new-window -t "$session_name" -c "${wt_paths[$i]}" -n "$(basename "${repos[$i]}")"
+    done
+
+    switch_or_attach "$session_name"
+    ;;
+esac

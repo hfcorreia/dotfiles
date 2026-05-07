@@ -1,5 +1,33 @@
 #!/usr/bin/env bash
 
+cleanup_worktrees() {
+    local session_name="$1"
+    local dirs=(~/work ~/dev)
+
+    for parent in "${dirs[@]}"; do
+        parent="${parent/#\~/$HOME}"
+        wt_base="${parent}/worktrees"
+        [[ -d "$wt_base" ]] || continue
+
+        for branch_dir in "$wt_base"/*/; do
+            [[ -d "$branch_dir" ]] || continue
+            branch=$(basename "$branch_dir")
+            if [[ "$(echo "$branch" | tr . _)" == "$session_name" ]]; then
+                for repo_wt in "$branch_dir"/*/; do
+                    [[ -d "$repo_wt" ]] || continue
+                    repo_name=$(basename "$repo_wt")
+                    main_repo="${parent}/${repo_name}"
+                    if [[ -d "$main_repo/.git" ]]; then
+                        git -C "$main_repo" worktree remove --force "$repo_wt" 2>/dev/null
+                    fi
+                done
+                rmdir "$branch_dir" 2>/dev/null
+            fi
+        done
+        rmdir "$wt_base" 2>/dev/null
+    done
+}
+
 sessions=$(tmux list-sessions -F '#{session_name}' | grep -v "^$(tmux display-message -p '#S')$")
 
 if [[ -z $sessions ]]; then
@@ -19,5 +47,8 @@ echo "$selected"
 read -p "[y/N]: " confirm
 
 if [[ $confirm == [yY] ]]; then
-    echo "$selected" | xargs -I{} tmux kill-session -t {}
+    while IFS= read -r session; do
+        cleanup_worktrees "$session"
+        tmux kill-session -t "$session"
+    done <<< "$selected"
 fi
