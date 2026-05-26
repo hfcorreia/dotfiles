@@ -22,6 +22,52 @@ switch_or_attach() {
   fi
 }
 
+# Create a tmux session with windows for the given paths
+# Usage: create_session <session_name> <paths_array> <names_array>
+create_session_with_windows() {
+  local session_name="$1"
+  shift
+  local -a paths=()
+  local -a names=()
+  # Split args: paths first, then "--", then names
+  while [[ $# -gt 0 && "$1" != "--" ]]; do
+    paths+=("$1"); shift
+  done
+  shift # skip "--"
+  while [[ $# -gt 0 ]]; do
+    names+=("$1"); shift
+  done
+
+  local count=${#paths[@]}
+
+  if [[ $count -gt 1 ]]; then
+    local choice
+    choice=$(printf "All %d windows\nJust 1 (first repo)" "$count" | fzf --reverse --prompt="Windows to open: ")
+    [[ -z $choice ]] && return 1
+    if [[ $choice == "Just 1 (first repo)" ]]; then
+      count=1
+    fi
+  fi
+
+  tmux new-session -ds "$session_name" -c "${paths[0]}" -n "${names[0]}"
+  for i in $(seq 1 $((count - 1))); do
+    tmux new-window -t "$session_name" -c "${paths[$i]}" -n "${names[$i]}"
+  done
+  cleanup_extra_windows "$session_name" "$count"
+}
+
+# Kill extra windows that plugins may async-create after new-session
+cleanup_extra_windows() {
+  local session_name="$1"
+  local expected="$2"
+  sleep 0.2
+  for idx in $(tmux list-windows -t "$session_name" -F '#{window_index}' | sort -rn); do
+    if [[ $idx -ge $expected ]]; then
+      tmux kill-window -t "${session_name}:${idx}" 2>/dev/null
+    fi
+  done
+}
+
 # Step 1: Select repo(s) — fzf --multi allows Tab to select multiple
 if [[ $# -eq 1 ]]; then
   selected=$1
@@ -110,10 +156,9 @@ case $mode in
       read -p "Session name [$default_name]: " custom_name
       selected_name=${custom_name:-$default_name}
       selected_name=$(echo "$selected_name" | tr . _)
-      tmux new-session -ds "$selected_name" -c "${repos[0]}" -n "$(basename "${repos[0]}")"
-      for i in $(seq 1 $((${#repos[@]} - 1))); do
-        tmux new-window -t "$selected_name" -c "${repos[$i]}" -n "$(basename "${repos[$i]}")"
-      done
+      repo_names=()
+      for r in "${repos[@]}"; do repo_names+=("$(basename "$r")"); done
+      create_session_with_windows "$selected_name" "${repos[@]}" -- "${repo_names[@]}" || exit 0
     else
       selected_name=$default_name
     fi
@@ -143,17 +188,23 @@ case $mode in
 
       if [[ ! -d "$wt_path" ]]; then
         default_branch=$(get_default_branch "$repo")
-        git -C "$repo" fetch origin "$default_branch"
-        git -C "$repo" worktree add "$wt_path" -b "$branch_name" "origin/${default_branch}"
+        if git -C "$repo" remote get-url origin &>/dev/null; then
+          git -C "$repo" fetch origin "$default_branch"
+          git -C "$repo" worktree add "$wt_path" -b "$branch_name" "origin/${default_branch}"
+        else
+          git -C "$repo" worktree add "$wt_path" -b "$branch_name" "$default_branch"
+        fi
+        if [[ -f "$wt_path/mise.toml" || -f "$wt_path/.mise.toml" ]]; then
+          mise trust "$wt_path" 2>/dev/null
+        fi
       fi
       wt_paths+=("$wt_path")
     done
 
-    # Create session with one window per repo
-    tmux new-session -ds "$session_name" -c "${wt_paths[0]}" -n "$(basename "${repos[0]}")"
-    for i in $(seq 1 $((${#repos[@]} - 1))); do
-      tmux new-window -t "$session_name" -c "${wt_paths[$i]}" -n "$(basename "${repos[$i]}")"
-    done
+    # Create session with window(s)
+    wt_names=()
+    for r in "${repos[@]}"; do wt_names+=("$(basename "$r")"); done
+    create_session_with_windows "$session_name" "${wt_paths[@]}" -- "${wt_names[@]}" || exit 0
 
     switch_or_attach "$session_name"
     ;;
@@ -184,11 +235,10 @@ case $mode in
       wt_paths+=("$wt_path")
     done
 
-    # Create session with one window per repo
-    tmux new-session -ds "$session_name" -c "${wt_paths[0]}" -n "$(basename "${repos[0]}")"
-    for i in $(seq 1 $((${#repos[@]} - 1))); do
-      tmux new-window -t "$session_name" -c "${wt_paths[$i]}" -n "$(basename "${repos[$i]}")"
-    done
+    # Create session with window(s)
+    wt_names=()
+    for r in "${repos[@]}"; do wt_names+=("$(basename "$r")"); done
+    create_session_with_windows "$session_name" "${wt_paths[@]}" -- "${wt_names[@]}" || exit 0
 
     switch_or_attach "$session_name"
     ;;
