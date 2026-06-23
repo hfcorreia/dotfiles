@@ -1,7 +1,7 @@
 local mason_deps = {
     "lua_ls",
     "ts_ls",
-    "terraform-ls",
+    "terraformls",
 }
 
 return {
@@ -101,30 +101,18 @@ return {
             vim.opt.signcolumn = 'yes'
         end,
         config = function()
-            local lspconfig = require('lspconfig')
-            local cmp = require('cmp_nvim_lsp')
+            -- Set cmp capabilities globally for all servers
+            vim.lsp.config('*', {
+                capabilities = require('cmp_nvim_lsp').default_capabilities(),
+            })
 
-            -- Add cmp_nvim_lsp capabilities settings to lspconfig
-            -- This should be executed before you configure any language server
-            local lsp_defaults = lspconfig.util.default_config
-            lsp_defaults.capabilities = vim.tbl_deep_extend(
-                'force',
-                lsp_defaults.capabilities,
-                cmp.default_capabilities()
-            )
-
-            -- LspAttach is where you enable features that only work
-            -- if there is a language server active in the file
             vim.api.nvim_create_autocmd('LspAttach', {
                 desc = 'LSP actions',
                 callback = function(event)
                     local opts = { buffer = event.buf }
 
-                    -- Enable completion triggered by <c-x><c-o>
                     vim.bo[event.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
 
-                    -- Buffer local mappings.
-                    -- See `:help vim.lsp.*` for documentation on any of the below functions
                     vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
                     vim.keymap.set('n', '<leader>K', vim.lsp.buf.hover, opts)
                     vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
@@ -140,8 +128,7 @@ return {
                 end,
             })
 
-            -- lspconfig for lua_ls
-            require("lspconfig").lua_ls.setup({
+            vim.lsp.config('lua_ls', {
                 settings = {
                     Lua = {
                         diagnostics = {
@@ -156,12 +143,6 @@ return {
                     },
                 }
             })
-
-            -- lspconfig for ts_ls
-            require("lspconfig").ts_ls.setup({})
-
-            -- lspconfig for terraform-ls
-            require("lspconfig").terraformls.setup({})
         end
     }
 }

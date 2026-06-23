@@ -35,7 +35,8 @@ return {
             },
         },
         dependencies = {
-            "MunifTanjim/nui.nvim",
+            -- pinned: nui.nvim 0.3 broke noice.nvim, unpin once noice adds 0.3 support
+            { "MunifTanjim/nui.nvim", commit = "de740991c12411b663994b2860f1a4fd0937c130" },
             "rcarriga/nvim-notify",
         },
     }

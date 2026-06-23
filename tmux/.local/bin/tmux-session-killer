@@ -17,8 +17,11 @@ cleanup_worktrees() {
                     [[ -d "$repo_wt" ]] || continue
                     repo_name=$(basename "$repo_wt")
                     main_repo="${parent}/${repo_name}"
-                    if [[ -d "$main_repo/.git" ]]; then
+                    if [[ -e "$main_repo/.git" ]]; then
                         git -C "$main_repo" worktree remove --force "$repo_wt" 2>/dev/null
+                        git -C "$main_repo" worktree prune 2>/dev/null
+                    else
+                        rm -rf "$repo_wt"
                     fi
                 done
                 rmdir "$branch_dir" 2>/dev/null
