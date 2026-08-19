@@ -6,9 +6,15 @@ return {
         opts = {
             integrations = {
                 cmp = true,
-                -- gitsigns = true,
+                gitsigns = true,
                 nvimtree = true,
                 treesitter = true,
+                treesitter_context = true,
+                telescope = { enabled = true },
+                mason = true,
+                noice = true,
+                notify = true,
+                mini = { enabled = true },
             }
         },
         init = function()

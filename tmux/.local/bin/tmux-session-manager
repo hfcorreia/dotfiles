@@ -1,0 +1,118 @@
+#!/usr/bin/env bash
+
+dirs=(~/work ~/dev)
+self="$(cd "$(dirname "$0")" && pwd)/$(basename "$0")"
+
+switch_or_attach() {
+  local session_name="$1"
+  if [[ -z $TMUX ]]; then
+    tmux attach-session -t "$session_name"
+  else
+    tmux switch-client -t "$session_name"
+  fi
+}
+
+# Prints "[New session]" plus one line per existing session (excluding the
+# current one), formatted as "name — description" when a description is set.
+list_sessions() {
+  local current
+  current=$(tmux display-message -p '#S' 2>/dev/null)
+  printf '[New session]\n'
+  tmux list-sessions -F '#{session_name}' 2>/dev/null | while IFS= read -r name; do
+    [[ "$name" == "$current" ]] && continue
+    [[ "$name" == claude* ]] && continue
+    desc=$(tmux show-options -qv -t "$name" '@description' 2>/dev/null)
+    if [[ -n "$desc" ]]; then
+      printf '%s — %s\n' "$name" "$desc"
+    else
+      printf '%s\n' "$name"
+    fi
+  done
+}
+
+# Kills the sessions named in the given "name — description" / "name" lines,
+# after a single y/N confirmation. Used as fzf's ctrl-x action.
+kill_selected() {
+  local names=()
+  for line in "$@"; do
+    [[ "$line" == "[New session]" ]] && continue
+    names+=("${line%% — *}")
+  done
+  [[ ${#names[@]} -eq 0 ]] && return 0
+
+  echo "Kill these sessions?"
+  printf '  %s\n' "${names[@]}"
+  read -p "[y/N]: " confirm
+  if [[ $confirm == [yY] ]]; then
+    for name in "${names[@]}"; do
+      tmux kill-session -t "$name" 2>/dev/null
+    done
+  fi
+}
+
+new_session_flow() {
+  local selected parent dir_name new_dir session_name description default_name
+
+  selected=$(printf '[New directory]\n%s\n' "$(find "${dirs[@]}" -mindepth 1 -maxdepth 1 -type d 2>/dev/null)" | fzf --reverse --prompt="Directory: ")
+  [[ -z $selected ]] && return 0
+
+  if [[ "$selected" == "[New directory]" ]]; then
+    read -p "Directory name: " dir_name
+    [[ -z $dir_name ]] && return 0
+    parent=$(printf '%s\n' "${dirs[@]}" | fzf --reverse --prompt="Parent dir: ")
+    [[ -z $parent ]] && return 0
+    parent="${parent/#\~/$HOME}"
+    new_dir="${parent}/${dir_name}"
+    mkdir -p "$new_dir"
+  else
+    new_dir="$selected"
+    dir_name=$(basename "$new_dir")
+  fi
+
+  default_name=$(echo "$dir_name" | tr . _)
+  read -p "Session name [$default_name]: " session_name
+  session_name=${session_name:-$default_name}
+  session_name=$(echo "$session_name" | tr . _)
+
+  if tmux has-session -t="$session_name" 2>/dev/null; then
+    switch_or_attach "$session_name"
+    return 0
+  fi
+
+  read -p "Description (optional): " description
+
+  tmux new-session -ds "$session_name" -c "$new_dir" -n "$dir_name"
+  if [[ -n "$description" ]]; then
+    tmux set-option -t "$session_name" '@description' "$description"
+  fi
+  switch_or_attach "$session_name"
+}
+
+# Internal modes, invoked recursively by fzf's ctrl-x/reload bindings below.
+case "$1" in
+  --list)
+    list_sessions
+    exit 0
+    ;;
+  --kill)
+    shift
+    kill_selected "$@"
+    exit 0
+    ;;
+esac
+
+result=$(list_sessions | fzf --reverse --multi \
+  --header "enter: switch/create  tab: select  ctrl-x: kill selected" \
+  --bind "ctrl-x:execute(${self} --kill {+})+reload(${self} --list)")
+
+[[ -z $result ]] && exit 0
+
+first_line=$(printf '%s\n' "$result" | head -n1)
+
+if [[ "$first_line" == "[New session]" ]]; then
+  new_session_flow
+  exit 0
+fi
+
+session_name="${first_line%% — *}"
+switch_or_attach "$session_name"

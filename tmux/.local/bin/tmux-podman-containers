@@ -1,0 +1,101 @@
+#!/usr/bin/env bash
+
+self="$(cd "$(dirname "$0")" && pwd)/$(basename "$0")"
+
+# Prints one line per running podman container, formatted as
+# "name — image (running_for)".
+list_containers() {
+  podman ps --format '{{.ID}}|{{.Image}}|{{.Names}}|{{.RunningFor}}' 2>/dev/null | while IFS='|' read -r id image name running_for; do
+    printf '%s — %s (%s)\n' "$name" "$image" "$running_for"
+  done
+}
+
+# Kills the containers named in the given "name — ..." lines, after a single
+# y/N confirmation. Used as fzf's ctrl-x action.
+kill_selected() {
+  local names=()
+  for line in "$@"; do
+    names+=("${line%% — *}")
+  done
+  [[ ${#names[@]} -eq 0 ]] && return 0
+
+  echo "Stop these containers?"
+  printf '  %s\n' "${names[@]}"
+  read -p "[y/N]: " confirm
+  if [[ $confirm == [yY] ]]; then
+    for name in "${names[@]}"; do
+      podman stop "$name" >/dev/null 2>&1
+    done
+  fi
+}
+
+# Opens a new window in the current session, named after the container, and
+# shells into it (bash if available, falling back to sh). Errors stay on
+# screen instead of vanishing with the window; a distroless/scratch image
+# with no shell at all gets a friendly one-liner instead of raw crun output.
+shell_into_container() {
+  local line="$1" name inner
+  name="${line%% — *}"
+
+  # With -it, the container runtime writes straight to the shared pty, so a
+  # client-side stderr redirect on the interactive exec can't catch a
+  # "not found" error before it hits the screen. Probe non-interactively
+  # first (no -t, so streams stay separable) to pick a shell that actually
+  # exists, then run the interactive exec exactly once.
+  inner='
+name="$1"
+shell=""
+if podman exec "$name" bash -c "exit 0" >/dev/null 2>&1; then
+  shell=bash
+elif podman exec "$name" sh -c "exit 0" >/dev/null 2>&1; then
+  shell=sh
+fi
+if [[ -z "$shell" ]]; then
+  echo
+  echo "$name has no shell (bash/sh not found in the image)."
+  read -n 1 -p "press any key to close"
+  exit 0
+fi
+if ! podman exec -it "$name" "$shell"; then
+  echo
+  echo "Failed to shell into $name"
+  read -n 1 -p "press any key to close"
+fi
+'
+
+  tmux new-window -n "$name" \
+    "bash -c $(printf '%q' "$inner") -- $(printf '%q' "$name")"
+}
+
+# Internal modes, invoked recursively by fzf's ctrl-x/reload bindings below.
+case "$1" in
+  --list)
+    list_containers
+    exit 0
+    ;;
+  --kill)
+    shift
+    kill_selected "$@"
+    exit 0
+    ;;
+esac
+
+# Surface unexpected failures instead of letting the popup silently close.
+trap 'echo; echo "tmux-podman-containers failed (exit $?)."; read -n 1 -p "press any key to close"' ERR
+
+if ! command -v podman >/dev/null 2>&1; then
+  echo "podman not found on PATH: $PATH"
+  read -n 1 -p "press any key to close"
+  exit 1
+fi
+
+result=$(list_containers | fzf --reverse --multi \
+  --header "enter: shell into container  tab: select  ctrl-x: stop selected" \
+  --bind "ctrl-x:execute(${self} --kill {+})+reload(${self} --list)" \
+  --preview-window "bottom,70%" \
+  --preview 'name={}; name=${name%% — *}; podman logs --tail 200 -f "$name"') || true
+
+[[ -z $result ]] && exit 0
+
+first_line=$(printf '%s\n' "$result" | head -n1)
+shell_into_container "$first_line"

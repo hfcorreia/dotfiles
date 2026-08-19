@@ -1,0 +1,9 @@
+[settings]
+idiomatic_version_file_enable_tools = []
+
+[tools]
+lua = "latest"
+node = "24"
+pnpm = "latest"
+python = "3.12"
+uv = "latest"

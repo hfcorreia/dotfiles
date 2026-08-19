@@ -1,0 +1,124 @@
+#!/usr/bin/env bash
+
+self="$(cd "$(dirname "$0")" && pwd)/$(basename "$0")"
+
+# Built directly from `ps`, not `podman ps`/`podman inspect`. Working dir
+# alone isn't a reliable key — multiple claude sessions in the same repo all
+# report the same -w argument — but each `podman run` process has its own
+# real tty, which is always 1:1 with a tmux pane. Every line here carries
+# its pid/tty as hidden trailing fields (tab-separated, via fzf's
+# --with-nth) so the visible text can stay human-readable while jump/kill
+# still key off the exact process.
+list_containers() {
+  ps -eo pid=,tty=,etime=,args= | awk '
+    {
+      pid = $1; tty = $2; etime = $3
+      $1 = ""; $2 = ""; $3 = ""
+      sub(/^ +/, "")
+      cmd = $0
+    }
+    cmd ~ /podman run/ && cmd ~ /\/dashlane-claude\/claude/ {
+      wd = ""; resume_id = ""
+      n = split(cmd, parts, " ")
+      for (i = 1; i <= n; i++) {
+        if (parts[i] == "-w") wd = parts[i + 1]
+        else if (parts[i] == "--resume") resume_id = substr(parts[i + 1], 1, 8)
+      }
+      printf "%s\t%s\t%s\t%s\t%s\n", pid, tty, etime, wd, resume_id
+    }
+  ' | while IFS=$'\t' read -r pid tty etime wd resume_id; do
+    started=$(ps -o lstart= -p "$pid" 2>/dev/null | awk '{print $4}' | cut -d: -f1,2)
+    tag=""
+    [[ -n "$resume_id" ]] && tag=", resumed $resume_id"
+    display=$(printf '%s  —  started %s, up %s%s' "$wd" "${started:-?}" "$etime" "$tag")
+    printf '%s\t%s\t%s\n' "$display" "$pid" "$tty"
+  done
+}
+
+# Sends SIGINT to each given pid, after a single y/N confirmation — the same
+# signal a Ctrl-C in that pane would send, which (with --rm) is the normal
+# clean-shutdown path for these containers.
+kill_selected() {
+  local pids=("$@")
+  [[ ${#pids[@]} -eq 0 ]] && return 0
+
+  echo "Interrupt these containers?"
+  printf '  pid %s\n' "${pids[@]}"
+  read -p "[y/N]: " confirm
+  if [[ $confirm == [yY] ]]; then
+    for pid in "${pids[@]}"; do
+      kill -INT "$pid" 2>/dev/null
+    done
+  fi
+}
+
+# Prints the "session:window.pane" target whose tty matches, or nothing.
+find_pane_for_tty() {
+  local tty="$1"
+  [[ -z "$tty" ]] && return 0
+  tmux list-panes -a -F '#{session_name}:#{window_index}.#{pane_index}	#{pane_tty}' |
+    awk -F'\t' -v tty="/dev/$tty" '$2 == tty { print $1; exit }'
+}
+
+# Prints a snapshot of the matching pane's current screen, for fzf's preview.
+preview_pane() {
+  local tty="$1" target
+  target=$(find_pane_for_tty "$tty")
+  if [[ -z "$target" ]]; then
+    echo "(no matching tmux pane)"
+    return 0
+  fi
+  tmux capture-pane -p -e -t "$target" | tail -n "${FZF_PREVIEW_LINES:-40}"
+}
+
+# Finds the tmux pane whose tty matches the selected line's container and
+# switches to it. $line is the full tab-separated "display\tpid\ttty" row.
+jump_to_pane() {
+  local line="$1" tty target
+
+  tty=$(printf '%s' "$line" | cut -f3)
+  target=$(find_pane_for_tty "$tty")
+
+  if [[ -z "$target" ]]; then
+    echo "No tmux pane found for tty: ${tty:-unknown}"
+    read -n 1
+    return 0
+  fi
+
+  if [[ -z $TMUX ]]; then
+    tmux attach-session -t "${target%%:*}"
+  else
+    tmux switch-client -t "$target"
+  fi
+  tmux select-window -t "$target"
+  tmux select-pane -t "$target"
+}
+
+# Internal modes, invoked recursively by fzf's ctrl-x/reload bindings below.
+case "$1" in
+  --list)
+    list_containers
+    exit 0
+    ;;
+  --kill)
+    shift
+    kill_selected "$@"
+    exit 0
+    ;;
+  --preview-tty)
+    preview_pane "$2"
+    exit 0
+    ;;
+esac
+
+result=$(list_containers | fzf --reverse --multi \
+  --delimiter '\t' --with-nth=1 \
+  --header "enter: jump to pane  tab: select  ctrl-x: interrupt selected" \
+  --bind "ctrl-x:execute(${self} --kill {+2})+reload(${self} --list)" \
+  --preview "${self} --preview-tty {3}" \
+  --preview-window up:70%:wrap)
+
+[[ -z $result ]] && exit 0
+
+first_line=$(printf '%s\n' "$result" | head -n1)
+jump_to_pane "$first_line"
