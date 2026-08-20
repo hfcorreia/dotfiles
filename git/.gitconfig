@@ -26,6 +26,7 @@
   editor = nvim
   excludesfile = ~/.gitignore.home
 	autocrlf = input
+	pager = diff-so-fancy | less --tabs=4 -RF
 [init]
   defaultBranch = main
 [help]
@@ -49,3 +50,5 @@
 [push]
   default = simple
 	autoSetupRemote = true
+[interactive]
+	diffFilter = diff-so-fancy --patch
